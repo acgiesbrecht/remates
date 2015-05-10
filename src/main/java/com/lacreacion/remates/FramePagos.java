@@ -9,11 +9,14 @@ import com.lacreacion.remates.domain.TblMiembros;
 import com.lacreacion.remates.domain.TblRecibos;
 import com.lacreacion.remates.domain.TblRemates;
 import com.lacreacion.remates.domain.TblRematesCategorias;
+import com.lacreacion.remates.domain.TblRematesCuotas;
 import com.lacreacion.remates.domain.TblRematesDetalle;
 import com.lacreacion.remates.domain.TblTransferencias;
+import com.lacreacion.remates.utils.Varios;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +123,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
         cmdCancel = new javax.swing.JButton();
         txtEfectivo = new javax.swing.JTextField();
         cmdProcesar = new javax.swing.JButton();
+        lblCuotasFechas = new javax.swing.JLabel();
 
         dateTableCellRenderer1.setText("dateTableCellRenderer1");
 
@@ -263,17 +267,19 @@ public class FramePagos extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(idMiembroLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(idMiembroLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTransferencia, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(424, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cmdProcesar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmdCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTransferencia, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblCuotasFechas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cmdProcesar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmdCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -282,7 +288,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idMiembroLabel5)
-                    .addComponent(txtTransferencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTransferencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCuotasFechas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idMiembroLabel6)
@@ -492,6 +499,18 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
             txtTransferencia.setText(String.format("%d", deuda - pagos));
             txtEfectivo.setText("0");
+
+            TblRematesCuotas cuotas = entityManager.find(TblRematesCuotas.class, listRemates.get(cboFechaRemate.getSelectedIndex()));
+            String fechas = "Las trnasferencias seran imprimidas con fechas de";
+            List<Date> listFechas = Varios.getCuotasFechas(cuotas);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            for (Date fecha : listFechas) {
+                fechas += ", " + sdf.format(fecha);
+            }
+            fechas = fechas + ".";
+            fechas = fechas.replaceFirst(",", ".");
+            lblCuotasFechas.setText(fechas);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
         }
@@ -630,6 +649,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel idMiembroLabel8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblCuotasFechas;
     private javax.swing.JLabel lblDeuda;
     private javax.swing.JLabel lblPagos;
     private javax.swing.JLabel lblSaldo;

@@ -6,7 +6,6 @@
 package com.lacreacion.remates;
 
 import com.lacreacion.remates.domain.TblMiembros;
-import com.lacreacion.remates.domain.TblRematesDetalle;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.beans.Beans;
@@ -48,6 +47,7 @@ public class FrameRematesDetalle extends JInternalFrame {
                 entityManager.getTransaction().begin();
             }
 
+            AutoCompleteDecorator.decorate(cboFechaRemate);
             AutoCompleteDecorator.decorate(cboCategoria);
             AutoCompleteDecorator.decorate(cboMiembro);
         } catch (Exception ex) {

@@ -48,6 +48,8 @@ public class MdiFrame extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mnuMiembros = new javax.swing.JMenuItem();
+        mnuMiembros3 = new javax.swing.JMenuItem();
+        mnuMiembros4 = new javax.swing.JMenuItem();
         mnuCategorias = new javax.swing.JMenuItem();
         mnuMiembros1 = new javax.swing.JMenuItem();
         mnuMiembros2 = new javax.swing.JMenuItem();
@@ -90,6 +92,22 @@ public class MdiFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(mnuMiembros);
+
+        mnuMiembros3.setText("Administrar Remates");
+        mnuMiembros3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuMiembros3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuMiembros3);
+
+        mnuMiembros4.setText("Administrar Cuotas de Remates");
+        mnuMiembros4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuMiembros4ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuMiembros4);
 
         mnuCategorias.setText("Administrar Categorias de Articulos");
         mnuCategorias.addActionListener(new java.awt.event.ActionListener() {
@@ -194,9 +212,8 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
-        }
-        // TODO add your handling code here:
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -209,8 +226,8 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
-        }
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void mnuMiembros1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros1ActionPerformed
@@ -223,8 +240,8 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
-        }
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_mnuMiembros1ActionPerformed
 
     private void mnuMiembros2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros2ActionPerformed
@@ -237,9 +254,37 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
-        }
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_mnuMiembros2ActionPerformed
+
+    private void mnuMiembros3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros3ActionPerformed
+        try {
+            FrameRematesAdmin frame = new FrameRematesAdmin();
+            frame.setVisible(true);
+
+            desktop.add(frame);
+
+            frame.setSelected(true);
+            frame.setMaximum(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuMiembros3ActionPerformed
+
+    private void mnuMiembros4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros4ActionPerformed
+        try {
+            FrameCuotasAdmin frame = new FrameCuotasAdmin();
+            frame.setVisible(true);
+
+            desktop.add(frame);
+
+            frame.setSelected(true);
+            frame.setMaximum(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuMiembros4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,6 +338,8 @@ public class MdiFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuMiembros;
     private javax.swing.JMenuItem mnuMiembros1;
     private javax.swing.JMenuItem mnuMiembros2;
+    private javax.swing.JMenuItem mnuMiembros3;
+    private javax.swing.JMenuItem mnuMiembros4;
     // End of variables declaration//GEN-END:variables
 
     /**
