@@ -6,6 +6,7 @@
 package com.lacreacion.remates;
 
 import com.lacreacion.remates.domain.TblMiembros;
+import com.lacreacion.remates.domain.TblRemates;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.beans.Beans;
@@ -104,7 +105,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         lblTotal = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cboFechaRemate = new javax.swing.JComboBox();
-        lblRemateDescripcion = new javax.swing.JLabel();
 
         FormListener formListener = new FormListener();
 
@@ -283,8 +283,6 @@ public class FrameRematesDetalle extends JInternalFrame {
 
         cboFechaRemate.addActionListener(formListener);
 
-        lblRemateDescripcion.setText("Decripcion:");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -313,7 +311,8 @@ public class FrameRematesDetalle extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(observacionField)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -331,14 +330,12 @@ public class FrameRematesDetalle extends JInternalFrame {
                                         .addComponent(idMiembroLabel2)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 0, 0))))
                     .addComponent(masterScrollPane)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cboFechaRemate, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblRemateDescripcion)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -351,8 +348,7 @@ public class FrameRematesDetalle extends JInternalFrame {
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(cboFechaRemate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRemateDescripcion))
+                    .addComponent(cboFechaRemate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(masterScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -391,7 +387,7 @@ public class FrameRematesDetalle extends JInternalFrame {
                         .addComponent(dateTableCellRenderer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(deleteButton)
@@ -640,7 +636,7 @@ public class FrameRematesDetalle extends JInternalFrame {
         try {
             if (cboFechaRemate.getSelectedIndex() > -1) {
 
-                String idRemate = listRemates.get(cboFechaRemate.getSelectedIndex()).getId().toString();
+                String idRemate = ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString();
                 queryRematesDetalle = entityManager.createQuery("SELECT r FROM TblRematesDetalle r WHERE r.id = " + idRemate);
                 listRematesDetalle.clear();
                 listRematesDetalle.addAll(queryRematesDetalle.getResultList());
@@ -683,7 +679,6 @@ public class FrameRematesDetalle extends JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblRemateDescripcion;
     private javax.swing.JLabel lblTotal;
     private java.util.List listMiembros;
     private java.util.List<com.lacreacion.remates.domain.TblRemates> listRemates;

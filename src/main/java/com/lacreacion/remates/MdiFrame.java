@@ -169,7 +169,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_mnuMiembrosActionPerformed
 
@@ -183,7 +183,8 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
         }
 
     }//GEN-LAST:event_mnuCategoriasActionPerformed
@@ -198,7 +199,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frameR.setSelected(true);
             frameR.setMaximum(true);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
@@ -212,6 +213,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
@@ -317,10 +319,8 @@ public class MdiFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MdiFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MdiFrame().setVisible(true);
         });
     }
 

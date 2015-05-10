@@ -5,16 +5,19 @@
  */
 package com.lacreacion.remates;
 
+import com.lacreacion.remates.domain.TblMiembros;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.beans.Beans;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.prefs.Preferences;
+import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -30,6 +33,7 @@ import net.sf.jasperreports.engine.JasperPrintManager;
 public class FrameTransferencias extends JInternalFrame {
 
     String databaseIP;
+    Map<String, String> persistenceMap = new HashMap<>();
 
     public FrameTransferencias() {
         super("Transferencias",
@@ -37,9 +41,24 @@ public class FrameTransferencias extends JInternalFrame {
                 true, //closable
                 true, //maximizable
                 true);//iconifiable
+        getDatabaseIP();
         initComponents();
         if (!Beans.isDesignTime()) {
             entityManager.getTransaction().begin();
+        }
+    }
+
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }
 
@@ -53,13 +72,13 @@ public class FrameTransferencias extends JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("remates_PU").createEntityManager();
+        entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblTransferencias t");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
         dateToStringConverter1 = new com.lacreacion.remates.utils.DateToStringConverter();
-        dateTableCellRenderer1 = new com.lacreacion.remates.utils.DateTableCellRenderer();
+        dateTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         fechahoraLabel = new javax.swing.JLabel();
@@ -75,8 +94,11 @@ public class FrameTransferencias extends JInternalFrame {
         refreshButton = new javax.swing.JButton();
         newButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
-        cboMiembro = new javax.swing.JComboBox();
         newButton1 = new javax.swing.JButton();
+        idMiembroLabel1 = new javax.swing.JLabel();
+        txtCtaCte = new javax.swing.JTextField();
+        idMiembroLabel2 = new javax.swing.JLabel();
+        cboMiembro = new javax.swing.JComboBox();
 
         FormListener formListener = new FormListener();
 
@@ -88,12 +110,14 @@ public class FrameTransferencias extends JInternalFrame {
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${id}"));
         columnBinding.setColumnName("Id");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechahora}"));
         columnBinding.setColumnName("Fecha/Hora");
         columnBinding.setColumnClass(java.util.Date.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idMiembro}"));
         columnBinding.setColumnName("Miembro");
         columnBinding.setColumnClass(com.lacreacion.remates.domain.TblMiembros.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${concepto}"));
         columnBinding.setColumnName("Concepto");
         columnBinding.setColumnClass(String.class);
@@ -145,7 +169,7 @@ public class FrameTransferencias extends JInternalFrame {
         saveButton.setText("Guardar");
         saveButton.addActionListener(formListener);
 
-        refreshButton.setText("Actualizar");
+        refreshButton.setText("Cancelar");
         refreshButton.addActionListener(formListener);
 
         newButton.setText("Nuevo");
@@ -158,16 +182,25 @@ public class FrameTransferencias extends JInternalFrame {
 
         deleteButton.addActionListener(formListener);
 
-        cboMiembro.setEditable(true);
+        newButton1.setText("Imprimir");
+        newButton1.addActionListener(formListener);
+
+        idMiembroLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        idMiembroLabel1.setText("Cta. Cte.:");
+
+        txtCtaCte.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtCtaCte.addFocusListener(formListener);
+        txtCtaCte.addKeyListener(formListener);
+
+        idMiembroLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        idMiembroLabel2.setText("Nombre:");
+
         cboMiembro.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listMiembros, cboMiembro);
         bindingGroup.addBinding(jComboBoxBinding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.idMiembro}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
-
-        newButton1.setText("Imprimir");
-        newButton1.addActionListener(formListener);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,17 +209,6 @@ public class FrameTransferencias extends JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(newButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(newButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton))
                     .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
@@ -214,8 +236,25 @@ public class FrameTransferencias extends JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(idMiembroLabel)
                                         .addGap(18, 18, 18)
-                                        .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                        .addComponent(idMiembroLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtCtaCte, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(idMiembroLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(newButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(newButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(refreshButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(saveButton)))
                 .addContainerGap())
         );
 
@@ -225,7 +264,7 @@ public class FrameTransferencias extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,6 +276,9 @@ public class FrameTransferencias extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idMiembroLabel)
+                    .addComponent(idMiembroLabel1)
+                    .addComponent(txtCtaCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(idMiembroLabel2)
                     .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -246,7 +288,7 @@ public class FrameTransferencias extends JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(montoLabel)
                     .addComponent(montoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(refreshButton)
@@ -261,7 +303,7 @@ public class FrameTransferencias extends JInternalFrame {
 
     // Code for dispatching events from components to event handlers.
 
-    private class FormListener implements java.awt.event.ActionListener, javax.swing.event.InternalFrameListener {
+    private class FormListener implements java.awt.event.ActionListener, java.awt.event.FocusListener, java.awt.event.KeyListener, javax.swing.event.InternalFrameListener {
         FormListener() {}
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             if (evt.getSource() == saveButton) {
@@ -279,6 +321,27 @@ public class FrameTransferencias extends JInternalFrame {
             else if (evt.getSource() == newButton1) {
                 FrameTransferencias.this.newButton1ActionPerformed(evt);
             }
+        }
+
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            if (evt.getSource() == txtCtaCte) {
+                FrameTransferencias.this.txtCtaCteFocusGained(evt);
+            }
+        }
+
+        public void focusLost(java.awt.event.FocusEvent evt) {
+        }
+
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+        }
+
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+            if (evt.getSource() == txtCtaCte) {
+                FrameTransferencias.this.txtCtaCteKeyReleased(evt);
+            }
+        }
+
+        public void keyTyped(java.awt.event.KeyEvent evt) {
         }
 
         public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -318,7 +381,7 @@ public class FrameTransferencias extends JInternalFrame {
             list.clear();
             list.addAll(data);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_refreshButtonActionPerformed
 
@@ -333,7 +396,7 @@ public class FrameTransferencias extends JInternalFrame {
             }
             list.removeAll(toRemove);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -346,7 +409,7 @@ public class FrameTransferencias extends JInternalFrame {
             masterTable.setRowSelectionInterval(row, row);
             masterTable.scrollRectToVisible(masterTable.getCellRect(row, 0, true));
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_newButtonActionPerformed
 
@@ -379,7 +442,7 @@ public class FrameTransferencias extends JInternalFrame {
                 //jReportsViewer.setVisible(true);
                 JasperPrintManager.printReport(jasperPrint, false);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
             }
         }
     }//GEN-LAST:event_newButton1ActionPerformed
@@ -388,11 +451,41 @@ public class FrameTransferencias extends JInternalFrame {
         databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
     }//GEN-LAST:event_formInternalFrameActivated
 
+    private void txtCtaCteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCtaCteFocusGained
+        try {
+            txtCtaCte.setSelectionStart(0);
+            txtCtaCte.setSelectionEnd(txtCtaCte.getText().length());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteFocusGained
+
+    private void txtCtaCteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyReleased
+        try {
+            txtCtaCte.setBackground(Color.white);
+            if (txtCtaCte.getText().length() > 4) {
+                List<TblMiembros> list = listMiembros;
+                Optional<TblMiembros> value = list.stream().filter(a -> a.getCtacte().equals(Integer.valueOf(txtCtaCte.getText())))
+                        .findFirst();
+                System.out.println(Integer.valueOf(txtCtaCte.getText()));
+                System.out.println(value.isPresent());
+                if (value.isPresent()) {
+                    cboMiembro.setSelectedItem(value.get());
+                    txtCtaCte.setBackground(Color.green);
+                    saveButton.requestFocus();
+                }
+
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboMiembro;
     private javax.swing.JTextField conceptoField;
     private javax.swing.JLabel conceptoLabel;
-    private com.lacreacion.remates.utils.DateTableCellRenderer dateTableCellRenderer1;
+    private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTableCellRenderer1;
     private com.lacreacion.remates.utils.DateToStringConverter dateToStringConverter1;
     private javax.swing.JButton deleteButton;
     private javax.persistence.EntityManager entityManager;
@@ -401,6 +494,8 @@ public class FrameTransferencias extends JInternalFrame {
     private javax.swing.JTextField idField;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idMiembroLabel;
+    private javax.swing.JLabel idMiembroLabel1;
+    private javax.swing.JLabel idMiembroLabel2;
     private java.util.List<com.lacreacion.remates.domain.TblTransferencias> list;
     private java.util.List listMiembros;
     private javax.swing.JScrollPane masterScrollPane;
@@ -413,6 +508,7 @@ public class FrameTransferencias extends JInternalFrame {
     private javax.persistence.Query queryMiembros;
     private javax.swing.JButton refreshButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JTextField txtCtaCte;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

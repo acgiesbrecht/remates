@@ -6,7 +6,7 @@
 package com.lacreacion.remates.utils;
 
 import com.lacreacion.remates.domain.TblRematesCuotas;
-import static java.util.Collections.emptyList;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class Varios {
     }
 
     public static List<Date> getCuotasFechas(TblRematesCuotas cuotas) {
-        List<Date> cuotasList = emptyList();
+        List<Date> cuotasList = new ArrayList<>();
         if (cuotas.getFecha1() != null) {
             cuotasList.add(cuotas.getFecha1());
         }

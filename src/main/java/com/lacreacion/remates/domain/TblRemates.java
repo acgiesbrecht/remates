@@ -6,6 +6,7 @@
 package com.lacreacion.remates.domain;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -38,6 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblRemates.findByFecha", query = "SELECT t FROM TblRemates t WHERE t.fecha = :fecha"),
     @NamedQuery(name = "TblRemates.findByDescripcion", query = "SELECT t FROM TblRemates t WHERE t.descripcion = :descripcion")})
 public class TblRemates implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,7 +126,8 @@ public class TblRemates implements Serializable {
 
     @Override
     public String toString() {
-        return "com.lacreacion.remates.domain.TblRemates[ id=" + id + " ]";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(fecha) + "  -  " + descripcion;
     }
 
 }

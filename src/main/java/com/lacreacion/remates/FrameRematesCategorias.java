@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
 import javax.swing.JFrame;
@@ -26,6 +25,7 @@ import javax.swing.JOptionPane;
 public class FrameRematesCategorias extends JInternalFrame {
 
     String databaseIP;
+    Map<String, String> persistenceMap = new HashMap<>();
 
     public FrameRematesCategorias() {
         super("Administrar Categorias",
@@ -34,18 +34,26 @@ public class FrameRematesCategorias extends JInternalFrame {
                 true, //maximizable
                 true);//iconifiable
 
-        EntityManagerFactory managerFactory = null;
-        Map<String, String> persistenceMap = new HashMap<String, String>();
-
-        persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
-
-        managerFactory = Persistence.createEntityManagerFactory("remates_PU", persistenceMap);
-        entityManager = managerFactory.createEntityManager();
+        getDatabaseIP();
         initComponents();
         if (!Beans.isDesignTime()) {
             entityManager.getTransaction().begin();
         }
 
+    }
+
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
     }
 
     /**
@@ -58,7 +66,7 @@ public class FrameRematesCategorias extends JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("remates_PU").createEntityManager();
+        entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesCategorias t");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
         masterScrollPane = new javax.swing.JScrollPane();
@@ -74,12 +82,11 @@ public class FrameRematesCategorias extends JInternalFrame {
 
         FormListener formListener = new FormListener();
 
-        addInternalFrameListener(formListener);
-
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, masterTable);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${id}"));
-        columnBinding.setColumnName("Nro.");
+        columnBinding.setColumnName("Nro");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${descripcion}"));
         columnBinding.setColumnName("Descripcion");
         columnBinding.setColumnClass(String.class);
@@ -114,7 +121,7 @@ public class FrameRematesCategorias extends JInternalFrame {
         saveButton.setText("Guardar");
         saveButton.addActionListener(formListener);
 
-        refreshButton.setText("Actualizar");
+        refreshButton.setText("Cancelar");
         refreshButton.addActionListener(formListener);
 
         newButton.setText("Nuevo");
@@ -189,7 +196,7 @@ public class FrameRematesCategorias extends JInternalFrame {
 
     // Code for dispatching events from components to event handlers.
 
-    private class FormListener implements java.awt.event.ActionListener, javax.swing.event.InternalFrameListener {
+    private class FormListener implements java.awt.event.ActionListener {
         FormListener() {}
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             if (evt.getSource() == saveButton) {
@@ -205,30 +212,6 @@ public class FrameRematesCategorias extends JInternalFrame {
                 FrameRematesCategorias.this.deleteButtonActionPerformed(evt);
             }
         }
-
-        public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            if (evt.getSource() == FrameRematesCategorias.this) {
-                FrameRematesCategorias.this.formInternalFrameActivated(evt);
-            }
-        }
-
-        public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-        }
-
-        public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-        }
-
-        public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-        }
-
-        public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-        }
-
-        public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-        }
-
-        public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-        }
     }// </editor-fold>//GEN-END:initComponents
 
     @SuppressWarnings("unchecked")
@@ -243,7 +226,7 @@ public class FrameRematesCategorias extends JInternalFrame {
             list.clear();
             list.addAll(data);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_refreshButtonActionPerformed
 
@@ -258,7 +241,7 @@ public class FrameRematesCategorias extends JInternalFrame {
             }
             list.removeAll(toRemove);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -271,7 +254,7 @@ public class FrameRematesCategorias extends JInternalFrame {
             masterTable.setRowSelectionInterval(row, row);
             masterTable.scrollRectToVisible(masterTable.getCellRect(row, 0, true));
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_newButtonActionPerformed
 

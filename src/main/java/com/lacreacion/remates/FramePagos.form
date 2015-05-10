@@ -7,32 +7,35 @@
         <Property name="persistenceUnit" type="java.lang.String" value="remates_PU"/>
       </Properties>
       <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory(&quot;remates_PU&quot;, persistenceMap).createEntityManager();"/>
         <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="false"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="2"/>
       </AuxValues>
     </Component>
     <Component class="com.lacreacion.remates.utils.DateToStringConverter" name="dateToStringConverter1">
     </Component>
-    <Component class="javax.persistence.Query" name="query">
+    <Component class="javax.persistence.Query" name="queryRemates">
       <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT t.fechahora FROM TblRemates t"/>
+        <Property name="query" type="java.lang.String" value="SELECT t FROM TblRemates t"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
           <ComponentRef name="entityManager"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="query = entityManager.createNativeQuery(&quot;SELECT to_char(fechahora, &apos;YYYY-MM-DD&apos;) FROM tbl_remates GROUP BY to_char(fechahora, &apos;YYYY-MM-DD&apos;)&quot;);"/>
         <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="false"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="2"/>
       </AuxValues>
     </Component>
-    <Component class="java.util.List" name="list">
+    <Component class="java.util.List" name="listRemates">
       <Properties>
         <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="query"/>
+          <ComponentRef name="queryRemates"/>
         </Property>
         <Property name="observable" type="boolean" value="true"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;com.lacreacion.remates.domain.TblRemates&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.persistence.Query" name="queryMiembros">
       <Properties>
@@ -42,9 +45,9 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.persistence.Query" name="queryRemates">
+    <Component class="javax.persistence.Query" name="queryRematesDetalle">
       <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT t FROM TblRemates t ORDER BY t.fechahora"/>
+        <Property name="query" type="java.lang.String" value="SELECT t FROM TblRemates t ORDER BY t.fecha"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
           <ComponentRef name="entityManager"/>
         </Property>
@@ -58,13 +61,16 @@
         <Property name="observable" type="boolean" value="true"/>
       </Properties>
     </Component>
-    <Component class="java.util.List" name="listRemates">
+    <Component class="java.util.List" name="listRematesDetalle">
       <Properties>
         <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="queryRemates"/>
+          <ComponentRef name="queryRematesDetalle"/>
         </Property>
         <Property name="observable" type="boolean" value="true"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;com.lacreacion.remates.domain.TblRematesDetalle&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="com.lacreacion.remates.utils.DateTableCellRenderer" name="dateTableCellRenderer1">
       <Properties>
@@ -190,7 +196,7 @@
   <SubComponents>
     <Component class="javax.swing.JComboBox" name="cboFechaRemate">
       <BindingProperties>
-        <BindingProperty name="elements" source="list" target="cboFechaRemate" targetPath="elements" updateStrategy="0" immediately="false"/>
+        <BindingProperty name="elements" source="listRemates" target="cboFechaRemate" targetPath="elements" updateStrategy="0" immediately="false"/>
       </BindingProperties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboFechaRemateActionPerformed"/>
@@ -289,7 +295,7 @@
             </Property>
           </Properties>
           <BindingProperties>
-            <BindingProperty name="elements" source="listRemates" target="masterTable" targetPath="elements" updateStrategy="0" immediately="true">
+            <BindingProperty name="elements" source="listRematesDetalle" target="masterTable" targetPath="elements" updateStrategy="0" immediately="true">
               <Subbinding sourcePath="${fechahora}">
                 <BindingParameter name="NAME" value="Fecha Hora"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
@@ -368,26 +374,31 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="idMiembroLabel6" min="-2" pref="91" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="txtEfectivo" min="-2" pref="121" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="idMiembroLabel6" min="-2" pref="91" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="txtEfectivo" min="-2" pref="121" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="cmdProcesar" min="-2" pref="138" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cmdCancel" min="-2" pref="120" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="idMiembroLabel5" min="-2" pref="91" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="txtTransferencia" min="-2" pref="121" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="lblCuotasFechas" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="cmdProcesar" min="-2" pref="138" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cmdCancel" min="-2" pref="120" max="-2" attributes="0"/>
+                          <EmptySpace pref="37" max="32767" attributes="0"/>
+                          <Component id="lblCuotasFechas" min="-2" pref="367" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -398,7 +409,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="idMiembroLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtTransferencia" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblCuotasFechas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblCuotasFechas" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
