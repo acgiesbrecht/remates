@@ -184,7 +184,6 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-            ex.printStackTrace();
         }
 
     }//GEN-LAST:event_mnuCategoriasActionPerformed
@@ -213,9 +212,9 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setSelected(true);
             frame.setMaximum(true);
         } catch (Exception ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -229,7 +228,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void mnuMiembros1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros1ActionPerformed
@@ -243,7 +242,8 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_mnuMiembros1ActionPerformed
 
     private void mnuMiembros2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros2ActionPerformed
@@ -257,7 +257,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_mnuMiembros2ActionPerformed
 
     private void mnuMiembros3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros3ActionPerformed
@@ -271,7 +271,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_mnuMiembros3ActionPerformed
 
     private void mnuMiembros4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros4ActionPerformed
@@ -285,7 +285,7 @@ public class MdiFrame extends javax.swing.JFrame {
             frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_mnuMiembros4ActionPerformed
 
     /**
@@ -319,8 +319,10 @@ public class MdiFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new MdiFrame().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MdiFrame().setVisible(true);
+            }
         });
     }
 

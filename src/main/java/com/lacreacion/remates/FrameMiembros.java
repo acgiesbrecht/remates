@@ -34,23 +34,12 @@ public class FrameMiembros extends JInternalFrame {
                 true, //maximizable
                 true);//iconifiable
 
-        getDatabaseIP();
-        initComponents();
-        if (!Beans.isDesignTime()) {
-            entityManager.getTransaction().begin();
-        }
-
-    }
-
-    private void getDatabaseIP() {
         try {
-            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
-
-            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
-            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
-            persistenceMap.put("javax.persistence.jdbc.password", "123456");
-            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
-
+            getDatabaseIP();
+            initComponents();
+            if (!Beans.isDesignTime()) {
+                entityManager.getTransaction().begin();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
@@ -67,8 +56,9 @@ public class FrameMiembros extends JInternalFrame {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
-        query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
+        query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.ctacte");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
+        ctaCteTableCellRenderer1 = new com.lacreacion.remates.utils.CtaCteTableCellRenderer();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         idLabel = new javax.swing.JLabel();
@@ -84,27 +74,38 @@ public class FrameMiembros extends JInternalFrame {
         newButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         ctacteLabel1 = new javax.swing.JLabel();
+        direccionLabel1 = new javax.swing.JLabel();
+        direccionField1 = new javax.swing.JTextField();
 
         FormListener formListener = new FormListener();
+
+        ctaCteTableCellRenderer1.setText("ctaCteTableCellRenderer1");
 
         addInternalFrameListener(formListener);
 
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, masterTable);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${id}"));
-        columnBinding.setColumnName("Nro.");
+        columnBinding.setColumnName("Id");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nombre}"));
         columnBinding.setColumnName("Nombre");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${ctacte}"));
-        columnBinding.setColumnName("Cta. Cte.");
+        columnBinding.setColumnName("Ctacte");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${direccion}"));
-        columnBinding.setColumnName("Direccion");
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${domicilio}"));
+        columnBinding.setColumnName("Domicilio");
         columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${box}"));
+        columnBinding.setColumnName("Casilla Correo");
+        columnBinding.setColumnClass(Integer.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         masterScrollPane.setViewportView(masterTable);
+        if (masterTable.getColumnModel().getColumnCount() > 0) {
+            masterTable.getColumnModel().getColumn(2).setCellRenderer(ctaCteTableCellRenderer1);
+        }
 
         idLabel.setText("Nro:");
 
@@ -112,7 +113,7 @@ public class FrameMiembros extends JInternalFrame {
 
         ctacteLabel.setText("Cta Cte:");
 
-        direccionLabel.setText("Direccion:");
+        direccionLabel.setText("Domicilio:");
 
         idField.setEditable(false);
 
@@ -129,12 +130,11 @@ public class FrameMiembros extends JInternalFrame {
         bindingGroup.addBinding(binding);
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.ctacte}"), ctacteField, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        binding.setSourceUnreadableValue("null");
         bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), ctacteField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.direccion}"), direccionField, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.domicilio}"), direccionField, org.jdesktop.beansbinding.BeanProperty.create("text"));
         binding.setSourceUnreadableValue("null");
         bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), direccionField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
@@ -143,7 +143,7 @@ public class FrameMiembros extends JInternalFrame {
         saveButton.setText("Guardar");
         saveButton.addActionListener(formListener);
 
-        refreshButton.setText("Actualizar");
+        refreshButton.setText("Cancelar");
         refreshButton.addActionListener(formListener);
 
         newButton.setText("Nuevo");
@@ -159,13 +159,25 @@ public class FrameMiembros extends JInternalFrame {
         ctacteLabel1.setForeground(new java.awt.Color(153, 153, 153));
         ctacteLabel1.setText("Formato: 71238/01 201237");
 
+        direccionLabel1.setText("Casilla Correo:");
+
+        direccionField1.setEnabled(false);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.box}"), direccionField1, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(direccionLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(direccionField1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(newButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteButton)
@@ -174,27 +186,24 @@ public class FrameMiembros extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nombreLabel)
+                            .addComponent(ctacteLabel)
+                            .addComponent(direccionLabel)
+                            .addComponent(idLabel))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(direccionField)
+                            .addComponent(nombreField)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nombreLabel)
-                                    .addComponent(ctacteLabel)
-                                    .addComponent(direccionLabel)
-                                    .addComponent(idLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nombreField, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                                    .addComponent(direccionField, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                                    .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(ctacteField, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(ctacteLabel1))
-                                            .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))))
+                                        .addComponent(ctacteField, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ctacteLabel1)))
+                                .addGap(0, 381, Short.MAX_VALUE))))
+                    .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -204,7 +213,7 @@ public class FrameMiembros extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -229,7 +238,9 @@ public class FrameMiembros extends JInternalFrame {
                     .addComponent(saveButton)
                     .addComponent(refreshButton)
                     .addComponent(deleteButton)
-                    .addComponent(newButton))
+                    .addComponent(newButton)
+                    .addComponent(direccionLabel1)
+                    .addComponent(direccionField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -280,26 +291,10 @@ public class FrameMiembros extends JInternalFrame {
         }
     }// </editor-fold>//GEN-END:initComponents
 
-    @SuppressWarnings("unchecked")
-    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        try {
-            entityManager.getTransaction().rollback();
-            entityManager.getTransaction().begin();
-            java.util.Collection data = query.getResultList();
-            for (Object entity : data) {
-                entityManager.refresh(entity);
-            }
-            list.clear();
-            list.addAll(data);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
-    }//GEN-LAST:event_refreshButtonActionPerformed
-
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         try {
             int[] selected = masterTable.getSelectedRows();
-            List<com.lacreacion.remates.domain.TblMiembros> toRemove = new ArrayList<com.lacreacion.remates.domain.TblMiembros>(selected.length);
+            List<com.lacreacion.remates.domain.TblMiembros> toRemove = new ArrayList<>(selected.length);
             for (int idx = 0; idx < selected.length; idx++) {
                 com.lacreacion.remates.domain.TblMiembros t = list.get(masterTable.convertRowIndexToModel(selected[idx]));
                 toRemove.add(t);
@@ -307,7 +302,7 @@ public class FrameMiembros extends JInternalFrame {
             }
             list.removeAll(toRemove);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -320,7 +315,7 @@ public class FrameMiembros extends JInternalFrame {
             masterTable.setRowSelectionInterval(row, row);
             masterTable.scrollRectToVisible(masterTable.getCellRect(row, 0, true));
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
     }//GEN-LAST:event_newButtonActionPerformed
 
@@ -328,10 +323,17 @@ public class FrameMiembros extends JInternalFrame {
         try {
             entityManager.getTransaction().commit();
             entityManager.getTransaction().begin();
+            java.util.Collection data = query.getResultList();
+            for (Object entity : data) {
+                entityManager.refresh(entity);
+            }
+            list.clear();
+            list.addAll(data);
+
         } catch (RollbackException rex) {
-            rex.printStackTrace();
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + rex.getMessage());
             entityManager.getTransaction().begin();
-            List<com.lacreacion.remates.domain.TblMiembros> merged = new ArrayList<com.lacreacion.remates.domain.TblMiembros>(list.size());
+            List<com.lacreacion.remates.domain.TblMiembros> merged = new ArrayList<>(list.size());
             for (com.lacreacion.remates.domain.TblMiembros t : list) {
                 merged.add(entityManager.merge(t));
             }
@@ -344,13 +346,45 @@ public class FrameMiembros extends JInternalFrame {
 
     }//GEN-LAST:event_formInternalFrameActivated
 
+    @SuppressWarnings("unchecked")
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        try {
+            entityManager.getTransaction().rollback();
+            entityManager.getTransaction().begin();
+            java.util.Collection data = query.getResultList();
+            for (Object entity : data) {
+                entityManager.refresh(entity);
+            }
+            list.clear();
+            list.addAll(data);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }//GEN-LAST:event_refreshButtonActionPerformed
+
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.lacreacion.remates.utils.CtaCteTableCellRenderer ctaCteTableCellRenderer1;
     private javax.swing.JTextField ctacteField;
     private javax.swing.JLabel ctacteLabel;
     private javax.swing.JLabel ctacteLabel1;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextField direccionField;
+    private javax.swing.JTextField direccionField1;
     private javax.swing.JLabel direccionLabel;
+    private javax.swing.JLabel direccionLabel1;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JTextField idField;
     private javax.swing.JLabel idLabel;

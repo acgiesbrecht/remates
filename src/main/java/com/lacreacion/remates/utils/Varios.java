@@ -5,6 +5,7 @@
  */
 package com.lacreacion.remates.utils;
 
+import com.lacreacion.remates.domain.CuotaModel;
 import com.lacreacion.remates.domain.TblRematesCuotas;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,22 +17,30 @@ import java.util.List;
  */
 public class Varios {
 
-    public static Integer getCuotasCantidad(TblRematesCuotas cuotas) {
-        int count = 0;
-        if (cuotas.getFecha1() != null) {
-            count++;
+    public static List<CuotaModel> getCuotas(TblRematesCuotas remateCuotas, Integer monto) {
+        List<Date> fechas = getCuotasFechas(remateCuotas);
+        List<CuotaModel> listCuotas = new ArrayList<>();
+        float divi = monto * 1.0F / fechas.size();
+        Integer montoCuota = Math.round(divi);
+        for (Date fecha : fechas) {
+            CuotaModel cuota = new CuotaModel();
+            cuota.setFecha(fecha);
+            cuota.setMonto(montoCuota);
+            listCuotas.add(cuota);
         }
-        if (cuotas.getFecha2() != null) {
-            count++;
+        if (montoCuota * fechas.size() > monto) {
+            CuotaModel cuota = new CuotaModel();
+            cuota.setFecha(listCuotas.get(listCuotas.size() - 1).getFecha());
+            cuota.setMonto(montoCuota - 1);
+            listCuotas.set(listCuotas.size() - 1, cuota);
+        } else if (montoCuota * fechas.size() < monto) {
+            CuotaModel cuota = new CuotaModel();
+            cuota.setFecha(listCuotas.get(listCuotas.size() - 1).getFecha());
+            cuota.setMonto(montoCuota + 1);
+            listCuotas.set(listCuotas.size() - 1, cuota);
         }
-        if (cuotas.getFecha3() != null) {
-            count++;
-        }
-        if (cuotas.getFecha4() != null) {
-            count++;
-        }
-        return count;
 
+        return listCuotas;
     }
 
     public static List<Date> getCuotasFechas(TblRematesCuotas cuotas) {

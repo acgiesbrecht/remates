@@ -33,27 +33,12 @@ public class FrameRematesCategorias extends JInternalFrame {
                 true, //closable
                 true, //maximizable
                 true);//iconifiable
-
         getDatabaseIP();
         initComponents();
         if (!Beans.isDesignTime()) {
             entityManager.getTransaction().begin();
         }
 
-    }
-
-    private void getDatabaseIP() {
-        try {
-            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
-
-            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
-            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
-            persistenceMap.put("javax.persistence.jdbc.password", "123456");
-            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }
     }
 
     /**
@@ -216,18 +201,15 @@ public class FrameRematesCategorias extends JInternalFrame {
 
     @SuppressWarnings("unchecked")
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        try {
-            entityManager.getTransaction().rollback();
-            entityManager.getTransaction().begin();
-            java.util.Collection data = query.getResultList();
-            for (Object entity : data) {
-                entityManager.refresh(entity);
-            }
-            list.clear();
-            list.addAll(data);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+
+        entityManager.getTransaction().rollback();
+        entityManager.getTransaction().begin();
+        java.util.Collection data = query.getResultList();
+        for (Object entity : data) {
+            entityManager.refresh(entity);
         }
+        list.clear();
+        list.addAll(data);
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -262,8 +244,14 @@ public class FrameRematesCategorias extends JInternalFrame {
         try {
             entityManager.getTransaction().commit();
             entityManager.getTransaction().begin();
+            java.util.Collection data = query.getResultList();
+            for (Object entity : data) {
+                entityManager.refresh(entity);
+            }
+            list.clear();
+            list.addAll(data);
         } catch (RollbackException rex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + rex.getMessage());
+            JOptionPane.showMessageDialog(null, rex.getMessage());
             entityManager.getTransaction().begin();
             List<com.lacreacion.remates.domain.TblRematesCategorias> merged = new ArrayList<com.lacreacion.remates.domain.TblRematesCategorias>(list.size());
             for (com.lacreacion.remates.domain.TblRematesCategorias t : list) {
@@ -274,10 +262,19 @@ public class FrameRematesCategorias extends JInternalFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
-    }//GEN-LAST:event_formInternalFrameActivated
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
 
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextField descripcionField;

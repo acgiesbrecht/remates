@@ -7,8 +7,11 @@ package com.lacreacion.remates;
 
 import java.awt.EventQueue;
 import java.beans.Beans;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -17,6 +20,11 @@ import javax.persistence.RollbackException;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *
@@ -33,22 +41,12 @@ public class FrameRecibos extends JInternalFrame {
                 true, //closable
                 true, //maximizable
                 true);//iconifiable
-        getDatabaseIP();
-        initComponents();
-        if (!Beans.isDesignTime()) {
-            entityManager.getTransaction().begin();
-        }
-    }
-
-    private void getDatabaseIP() {
         try {
-            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
-
-            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
-            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
-            persistenceMap.put("javax.persistence.jdbc.password", "123456");
-            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
-
+            getDatabaseIP();
+            initComponents();
+            if (!Beans.isDesignTime()) {
+                entityManager.getTransaction().begin();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
@@ -70,24 +68,7 @@ public class FrameRecibos extends JInternalFrame {
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
         dateToStringConverter1 = new com.lacreacion.remates.utils.DateToStringConverter();
-        dateTableCellRenderer1 = new com.lacreacion.remates.utils.DateTableCellRenderer();
-        jInternalFrame1 = new javax.swing.JInternalFrame();
-        masterScrollPane1 = new javax.swing.JScrollPane();
-        masterTable1 = new javax.swing.JTable();
-        fechahoraLabel1 = new javax.swing.JLabel();
-        conceptoLabel1 = new javax.swing.JLabel();
-        montoLabel1 = new javax.swing.JLabel();
-        idLabel1 = new javax.swing.JLabel();
-        idMiembroLabel1 = new javax.swing.JLabel();
-        fechahoraField1 = new javax.swing.JTextField();
-        conceptoField1 = new javax.swing.JTextField();
-        montoField1 = new javax.swing.JTextField();
-        idField1 = new javax.swing.JTextField();
-        saveButton1 = new javax.swing.JButton();
-        refreshButton1 = new javax.swing.JButton();
-        newButton1 = new javax.swing.JButton();
-        deleteButton1 = new javax.swing.JButton();
-        cboMiembro1 = new javax.swing.JComboBox();
+        dateTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         fechahoraLabel = new javax.swing.JLabel();
@@ -104,124 +85,11 @@ public class FrameRecibos extends JInternalFrame {
         newButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         cboMiembro = new javax.swing.JComboBox();
+        printButton = new javax.swing.JButton();
 
         FormListener formListener = new FormListener();
 
         dateTableCellRenderer1.setText("dateTableCellRenderer1");
-
-        jInternalFrame1.addInternalFrameListener(formListener);
-
-        masterScrollPane1.setViewportView(masterTable1);
-        if (masterTable1.getColumnModel().getColumnCount() > 0) {
-            masterTable1.getColumnModel().getColumn(1).setCellRenderer(dateTableCellRenderer1);
-        }
-
-        fechahoraLabel1.setText("Fecha/Hora:");
-
-        conceptoLabel1.setText("Concepto:");
-
-        montoLabel1.setText("Monto:");
-
-        idLabel1.setText("Id:");
-
-        idMiembroLabel1.setText("Miembro:");
-
-        saveButton1.setText("Guardar");
-        saveButton1.addActionListener(formListener);
-
-        refreshButton1.setText("Actualizar");
-        refreshButton1.addActionListener(formListener);
-
-        newButton1.setText("Nuevo");
-        newButton1.addActionListener(formListener);
-
-        deleteButton1.setText("Eliminar");
-        deleteButton1.addActionListener(formListener);
-
-        cboMiembro1.setEditable(true);
-        cboMiembro1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jInternalFrame1Layout.createSequentialGroup()
-                        .addComponent(newButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton1))
-                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(masterScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(conceptoLabel1)
-                                            .addComponent(montoLabel1))
-                                        .addGap(14, 14, 14)
-                                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(conceptoField1)
-                                            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                                                .addComponent(montoField1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
-                                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                                                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(fechahoraLabel1)
-                                                    .addComponent(idLabel1))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(idField1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(fechahoraField1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                                                .addComponent(idMiembroLabel1)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(cboMiembro1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
-                .addContainerGap())
-        );
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(masterScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(idField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(idLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fechahoraLabel1)
-                    .addComponent(fechahoraField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(idMiembroLabel1)
-                    .addComponent(cboMiembro1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(conceptoLabel1)
-                    .addComponent(conceptoField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(montoLabel1)
-                    .addComponent(montoField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveButton1)
-                    .addComponent(refreshButton1)
-                    .addComponent(deleteButton1)
-                    .addComponent(newButton1))
-                .addGap(22, 22, 22))
-        );
 
         addInternalFrameListener(formListener);
 
@@ -229,12 +97,14 @@ public class FrameRecibos extends JInternalFrame {
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${id}"));
         columnBinding.setColumnName("Id");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechahora}"));
         columnBinding.setColumnName("Fecha/Hora");
         columnBinding.setColumnClass(java.util.Date.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idMiembro}"));
         columnBinding.setColumnName("Miembro");
         columnBinding.setColumnClass(com.lacreacion.remates.domain.TblMiembros.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${concepto}"));
         columnBinding.setColumnName("Concepto");
         columnBinding.setColumnClass(String.class);
@@ -286,7 +156,7 @@ public class FrameRecibos extends JInternalFrame {
         saveButton.setText("Guardar");
         saveButton.addActionListener(formListener);
 
-        refreshButton.setText("Actualizar");
+        refreshButton.setText("Cancelar");
         refreshButton.addActionListener(formListener);
 
         newButton.setText("Nuevo");
@@ -307,13 +177,20 @@ public class FrameRecibos extends JInternalFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.idMiembro}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
 
+        printButton.setText("Imprimir");
+        printButton.addActionListener(formListener);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(printButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteButton)
@@ -321,38 +198,35 @@ public class FrameRecibos extends JInternalFrame {
                         .addComponent(refreshButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveButton))
+                    .addComponent(masterScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(masterScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(conceptoLabel)
+                                    .addComponent(montoLabel))
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(conceptoField)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(montoField, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(conceptoLabel)
-                                            .addComponent(montoLabel))
-                                        .addGap(14, 14, 14)
+                                            .addComponent(fechahoraLabel)
+                                            .addComponent(idLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(conceptoField)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(montoField, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                            .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(fechahoraField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(fechahoraLabel)
-                                                    .addComponent(idLabel))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(fechahoraField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(idMiembroLabel)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
+                                        .addComponent(idMiembroLabel)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
 
@@ -362,7 +236,7 @@ public class FrameRecibos extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -388,7 +262,8 @@ public class FrameRecibos extends JInternalFrame {
                     .addComponent(saveButton)
                     .addComponent(refreshButton)
                     .addComponent(deleteButton)
-                    .addComponent(newButton))
+                    .addComponent(newButton)
+                    .addComponent(printButton))
                 .addGap(22, 22, 22))
         );
 
@@ -412,26 +287,14 @@ public class FrameRecibos extends JInternalFrame {
             else if (evt.getSource() == deleteButton) {
                 FrameRecibos.this.deleteButtonActionPerformed(evt);
             }
-            else if (evt.getSource() == saveButton1) {
-                FrameRecibos.this.saveButton1ActionPerformed(evt);
-            }
-            else if (evt.getSource() == refreshButton1) {
-                FrameRecibos.this.refreshButton1ActionPerformed(evt);
-            }
-            else if (evt.getSource() == newButton1) {
-                FrameRecibos.this.newButton1ActionPerformed(evt);
-            }
-            else if (evt.getSource() == deleteButton1) {
-                FrameRecibos.this.deleteButton1ActionPerformed(evt);
+            else if (evt.getSource() == printButton) {
+                FrameRecibos.this.printButtonActionPerformed(evt);
             }
         }
 
         public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             if (evt.getSource() == FrameRecibos.this) {
                 FrameRecibos.this.formInternalFrameActivated(evt);
-            }
-            else if (evt.getSource() == jInternalFrame1) {
-                FrameRecibos.this.jInternalFrame1formInternalFrameActivated(evt);
             }
         }
 
@@ -502,9 +365,15 @@ public class FrameRecibos extends JInternalFrame {
         try {
             entityManager.getTransaction().commit();
             entityManager.getTransaction().begin();
+            java.util.Collection data = query.getResultList();
+            for (Object entity : data) {
+                entityManager.refresh(entity);
+            }
+            list.clear();
+            list.addAll(data);
         } catch (RollbackException rex) {
 
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + rex.getMessage());
+            JOptionPane.showMessageDialog(null, rex.getMessage());
 
             entityManager.getTransaction().begin();
             List<com.lacreacion.remates.domain.TblRecibos> merged = new ArrayList<>(list.size());
@@ -517,70 +386,68 @@ public class FrameRecibos extends JInternalFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
     }//GEN-LAST:event_formInternalFrameActivated
 
-    private void saveButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_saveButton1ActionPerformed
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+        if (masterTable.getSelectedRow() > 0) {
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+                Map parameters = new HashMap();
+                parameters.put("recibo_id", Integer.valueOf(idField.getText()));
 
-    private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_refreshButton1ActionPerformed
+                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/recibo.jrxml"));
 
-    private void newButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newButton1ActionPerformed
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+                //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                //jReportsViewer.setVisible(true);
+                JasperPrintManager.printReport(jasperPrint, false);
 
-    private void deleteButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_deleteButton1ActionPerformed
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_printButtonActionPerformed
 
-    private void jInternalFrame1formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_jInternalFrame1formInternalFrameActivated
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jInternalFrame1formInternalFrameActivated
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
 
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboMiembro;
-    private javax.swing.JComboBox cboMiembro1;
     private javax.swing.JTextField conceptoField;
-    private javax.swing.JTextField conceptoField1;
     private javax.swing.JLabel conceptoLabel;
-    private javax.swing.JLabel conceptoLabel1;
-    private com.lacreacion.remates.utils.DateTableCellRenderer dateTableCellRenderer1;
+    private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTableCellRenderer1;
     private com.lacreacion.remates.utils.DateToStringConverter dateToStringConverter1;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JButton deleteButton1;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JTextField fechahoraField;
-    private javax.swing.JTextField fechahoraField1;
     private javax.swing.JLabel fechahoraLabel;
-    private javax.swing.JLabel fechahoraLabel1;
     private javax.swing.JTextField idField;
-    private javax.swing.JTextField idField1;
     private javax.swing.JLabel idLabel;
-    private javax.swing.JLabel idLabel1;
     private javax.swing.JLabel idMiembroLabel;
-    private javax.swing.JLabel idMiembroLabel1;
-    private javax.swing.JInternalFrame jInternalFrame1;
     private java.util.List<com.lacreacion.remates.domain.TblRecibos> list;
     private java.util.List listMiembros;
     private javax.swing.JScrollPane masterScrollPane;
-    private javax.swing.JScrollPane masterScrollPane1;
     private javax.swing.JTable masterTable;
-    private javax.swing.JTable masterTable1;
     private javax.swing.JTextField montoField;
-    private javax.swing.JTextField montoField1;
     private javax.swing.JLabel montoLabel;
-    private javax.swing.JLabel montoLabel1;
     private javax.swing.JButton newButton;
-    private javax.swing.JButton newButton1;
+    private javax.swing.JButton printButton;
     private javax.persistence.Query query;
     private javax.persistence.Query queryMiembros;
     private javax.swing.JButton refreshButton;
-    private javax.swing.JButton refreshButton1;
     private javax.swing.JButton saveButton;
-    private javax.swing.JButton saveButton1;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

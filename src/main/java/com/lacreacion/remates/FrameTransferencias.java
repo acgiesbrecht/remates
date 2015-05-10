@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,9 +23,12 @@ import javax.persistence.RollbackException;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.JasperReport;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -46,20 +50,7 @@ public class FrameTransferencias extends JInternalFrame {
         if (!Beans.isDesignTime()) {
             entityManager.getTransaction().begin();
         }
-    }
-
-    private void getDatabaseIP() {
-        try {
-            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
-
-            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
-            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
-            persistenceMap.put("javax.persistence.jdbc.password", "123456");
-            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }
+        AutoCompleteDecorator.decorate(cboMiembro);
     }
 
     /**
@@ -190,6 +181,7 @@ public class FrameTransferencias extends JInternalFrame {
 
         txtCtaCte.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtCtaCte.addFocusListener(formListener);
+        txtCtaCte.addActionListener(formListener);
         txtCtaCte.addKeyListener(formListener);
 
         idMiembroLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -321,6 +313,9 @@ public class FrameTransferencias extends JInternalFrame {
             else if (evt.getSource() == newButton1) {
                 FrameTransferencias.this.newButton1ActionPerformed(evt);
             }
+            else if (evt.getSource() == txtCtaCte) {
+                FrameTransferencias.this.txtCtaCteActionPerformed(evt);
+            }
         }
 
         public void focusGained(java.awt.event.FocusEvent evt) {
@@ -333,6 +328,9 @@ public class FrameTransferencias extends JInternalFrame {
         }
 
         public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getSource() == txtCtaCte) {
+                FrameTransferencias.this.txtCtaCteKeyPressed(evt);
+            }
         }
 
         public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -342,6 +340,9 @@ public class FrameTransferencias extends JInternalFrame {
         }
 
         public void keyTyped(java.awt.event.KeyEvent evt) {
+            if (evt.getSource() == txtCtaCte) {
+                FrameTransferencias.this.txtCtaCteKeyTyped(evt);
+            }
         }
 
         public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -369,20 +370,32 @@ public class FrameTransferencias extends JInternalFrame {
         }
     }// </editor-fold>//GEN-END:initComponents
 
-    @SuppressWarnings("unchecked")
-    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+    void refresh() {
         try {
             entityManager.getTransaction().rollback();
             entityManager.getTransaction().begin();
             java.util.Collection data = query.getResultList();
-            for (Object entity : data) {
+            data.stream().forEach((entity) -> {
                 entityManager.refresh(entity);
-            }
+            });
             list.clear();
             list.addAll(data);
+
+            data = queryMiembros.getResultList();
+            data.stream().forEach((entity) -> {
+                entityManager.refresh(entity);
+            });
+            listMiembros.clear();
+            listMiembros.addAll(data);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        refresh();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -417,8 +430,14 @@ public class FrameTransferencias extends JInternalFrame {
         try {
             entityManager.getTransaction().commit();
             entityManager.getTransaction().begin();
+            java.util.Collection data = query.getResultList();
+            for (Object entity : data) {
+                entityManager.refresh(entity);
+            }
+            list.clear();
+            list.addAll(data);
         } catch (RollbackException rex) {
-            JOptionPane.showMessageDialog(null, getClass().getEnclosingMethod().getName() + " - Error: " + rex.getMessage());
+            JOptionPane.showMessageDialog(null, rex.getMessage());
             entityManager.getTransaction().begin();
             List<com.lacreacion.remates.domain.TblTransferencias> merged = new ArrayList<com.lacreacion.remates.domain.TblTransferencias>(list.size());
             for (com.lacreacion.remates.domain.TblTransferencias t : list) {
@@ -437,18 +456,22 @@ public class FrameTransferencias extends JInternalFrame {
                 parameters.put("transferencia_id", Integer.valueOf(idField.getText()));
                 parameters.put("logo", getClass().getResource("/reports/cclogo200.png").getPath());
 
-                JasperPrint jasperPrint = JasperFillManager.fillReport(getClass().getResourceAsStream("/reports/transferencia.jasper"), parameters, conn);
+                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
                 //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
                 //jReportsViewer.setVisible(true);
                 JasperPrintManager.printReport(jasperPrint, false);
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+                ex.printStackTrace();
             }
         }
     }//GEN-LAST:event_newButton1ActionPerformed
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void txtCtaCteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCtaCteFocusGained
@@ -457,8 +480,17 @@ public class FrameTransferencias extends JInternalFrame {
             txtCtaCte.setSelectionEnd(txtCtaCte.getText().length());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_txtCtaCteFocusGained
+
+    private void txtCtaCteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCtaCteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteActionPerformed
+
+    private void txtCtaCteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteKeyPressed
 
     private void txtCtaCteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyReleased
         try {
@@ -478,9 +510,29 @@ public class FrameTransferencias extends JInternalFrame {
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }        // TODO add your handling code here:
+        }
+
+        // TODO add your handling code here:
     }//GEN-LAST:event_txtCtaCteKeyReleased
 
+    private void txtCtaCteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyTyped
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteKeyTyped
+
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboMiembro;
     private javax.swing.JTextField conceptoField;
