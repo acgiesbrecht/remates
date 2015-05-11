@@ -32,6 +32,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.apache.commons.lang.StringUtils;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -86,6 +87,9 @@ public class FramePagos extends javax.swing.JInternalFrame {
             txtTransferencia.setVisible(false);
             txtEfectivo.setVisible(false);
             cmdProcesar.setVisible(false);
+
+            AutoCompleteDecorator.decorate(cboFechaRemate);
+            AutoCompleteDecorator.decorate(cboMiembro);
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
@@ -591,7 +595,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
                     JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
 
                     JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-                 //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                    //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
                     //jReportsViewer.setVisible(true);
                     JasperPrintManager.printReport(jasperPrint, false);
                 }
