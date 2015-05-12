@@ -5,8 +5,11 @@
  */
 package com.lacreacion.remates;
 
+import com.lacreacion.remates.domain.TblMiembros;
 import java.awt.EventQueue;
 import java.beans.Beans;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +17,15 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 /**
  *
@@ -76,6 +85,7 @@ public class FrameMiembros extends JInternalFrame {
         ctacteLabel1 = new javax.swing.JLabel();
         direccionLabel1 = new javax.swing.JLabel();
         ctacteField1 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         FormListener formListener = new FormListener();
 
@@ -157,7 +167,7 @@ public class FrameMiembros extends JInternalFrame {
         deleteButton.addActionListener(formListener);
 
         ctacteLabel1.setForeground(new java.awt.Color(153, 153, 153));
-        ctacteLabel1.setText("Formato: 71238/01 201237");
+        ctacteLabel1.setText("Formato: 7123801 201237 (Solo numeros sin simbolos como - o /)");
 
         direccionLabel1.setText("Casilla Correo:");
 
@@ -168,6 +178,9 @@ public class FrameMiembros extends JInternalFrame {
 
         ctacteField1.addActionListener(formListener);
 
+        jButton3.setText("Cargar EXCEL de Miembros");
+        jButton3.addActionListener(formListener);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -175,18 +188,6 @@ public class FrameMiembros extends JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(direccionLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ctacteField1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(newButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nombreLabel)
@@ -204,8 +205,23 @@ public class FrameMiembros extends JInternalFrame {
                                         .addComponent(ctacteField, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(ctacteLabel1)))
-                                .addGap(0, 381, Short.MAX_VALUE))))
-                    .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE))
+                                .addGap(0, 200, Short.MAX_VALUE))))
+                    .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(direccionLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ctacteField1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(newButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(refreshButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(saveButton)))
                 .addContainerGap())
         );
 
@@ -215,7 +231,7 @@ public class FrameMiembros extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,13 +253,17 @@ public class FrameMiembros extends JInternalFrame {
                     .addComponent(direccionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveButton)
-                    .addComponent(refreshButton)
-                    .addComponent(deleteButton)
-                    .addComponent(newButton)
                     .addComponent(direccionLabel1)
                     .addComponent(ctacteField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(saveButton)
+                        .addComponent(refreshButton)
+                        .addComponent(deleteButton)
+                        .addComponent(newButton)))
+                .addGap(6, 6, 6))
         );
 
         bindingGroup.bind();
@@ -268,6 +288,9 @@ public class FrameMiembros extends JInternalFrame {
             }
             else if (evt.getSource() == ctacteField1) {
                 FrameMiembros.this.ctacteField1ActionPerformed(evt);
+            }
+            else if (evt.getSource() == jButton3) {
+                FrameMiembros.this.jButton3ActionPerformed(evt);
             }
         }
 
@@ -371,6 +394,62 @@ public class FrameMiembros extends JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ctacteField1ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                getDatabaseIP();
+                File file = fc.getSelectedFile();
+                POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+                HSSFWorkbook wb = new HSSFWorkbook(fs);
+                HSSFSheet sheet = wb.getSheetAt(0);
+                HSSFRow row;
+                HSSFCell cell;
+
+                int rows; // No of rows
+                rows = sheet.getPhysicalNumberOfRows();
+
+                int cols = 0; // No of columns
+                int tmp = 0;
+
+                // This trick ensures that we get the data properly even if it doesn't start from first few rows
+                for (int i = 0; i < 10 || i < rows; i++) {
+                    row = sheet.getRow(i);
+                    if (row != null) {
+                        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                        if (tmp > cols) {
+                            cols = tmp;
+                        }
+                    }
+                }
+
+                for (int r = 1; r < rows; r++) {
+                    row = sheet.getRow(r);
+                    if (row != null) {
+                        entityManager.getTransaction().commit();
+                        entityManager.getTransaction().begin();
+                        TblMiembros miembro = new TblMiembros();
+                        miembro.setNombre(row.getCell(0).getStringCellValue());
+                        miembro.setCtacte(Integer.valueOf(row.getCell(1).getStringCellValue().replaceAll("[^\\d.]", "")));
+                        miembro.setDomicilio(row.getCell(2).getStringCellValue());
+                        miembro.setBox((int) row.getCell(3).getNumericCellValue());
+                        entityManager.persist(miembro);
+                        entityManager.flush();
+                        java.util.Collection data = query.getResultList();
+                        list.clear();
+                        list.addAll(data);
+                    }
+                }
+
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     private void getDatabaseIP() {
         try {
             databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
@@ -397,6 +476,7 @@ public class FrameMiembros extends JInternalFrame {
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JTextField idField;
     private javax.swing.JLabel idLabel;
+    private javax.swing.JButton jButton3;
     private java.util.List<com.lacreacion.remates.domain.TblMiembros> list;
     private javax.swing.JScrollPane masterScrollPane;
     private javax.swing.JTable masterTable;

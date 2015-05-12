@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.1.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-05-04T16:52:47 -->
+<!-- 2015-05-12T13:51:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transferencia" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="78c20e98-1bd9-416f-bdbe-337f3341ab83">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="RematePG"/>
 	<parameter name="transferencia_id" class="java.lang.Integer"/>
@@ -24,6 +24,18 @@ where id =  $P{transferencia_id}]]>
 	</background>
 	<detail>
 		<band height="801" splitType="Stretch">
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="5" y="420" width="267" height="38" uuid="31a4c77d-acbe-47e2-81ec-7b05969d24bd"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="6" y="690" width="267" height="38" uuid="7d078960-6408-4524-98eb-dec4d69c50b1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="0" y="0" width="557" height="240" uuid="90a5639e-c2b6-4592-b590-6176a1f7a972"/>
 				<graphicElement>
@@ -132,7 +144,7 @@ where id =  $P{transferencia_id}]]>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[DEBITESE en CTA. CTE. Nº:]]></text>
+				<text><![CDATA[ACREDITESE en CTA. CTE. Nº:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="6" y="192" width="106" height="10" uuid="0e7324f6-ee53-4670-9865-13073f402bb0"/>
@@ -435,7 +447,7 @@ where id =  $P{transferencia_id}]]>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[DEBITESE en CTA. CTE. Nº:]]></text>
+				<text><![CDATA[ACREDITESE en CTA. CTE. Nº:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="293" y="380" width="114" height="10" uuid="12a11930-0138-4b47-a2dd-82ef4429814c"/>
@@ -473,12 +485,6 @@ where id =  $P{transferencia_id}]]>
 			</rectangle>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="5" y="377" width="267" height="38" uuid="f4070940-9d68-4e0c-ac1f-09295056a6d4"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<rectangle radius="5">
-				<reportElement mode="Transparent" x="5" y="420" width="267" height="38" uuid="31a4c77d-acbe-47e2-81ec-7b05969d24bd"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
@@ -723,7 +729,7 @@ where id =  $P{transferencia_id}]]>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[DEBITESE en CTA. CTE. Nº:]]></text>
+				<text><![CDATA[ACREDITESE en CTA. CTE. Nº:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="294" y="650" width="114" height="10" uuid="b887225a-cb22-490c-97ae-c3b5f5f8182f"/>
@@ -761,12 +767,6 @@ where id =  $P{transferencia_id}]]>
 			</rectangle>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="6" y="647" width="267" height="38" uuid="1e23db1e-a4a3-40ed-a4bf-72f83c181498"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<rectangle radius="5">
-				<reportElement mode="Transparent" x="6" y="690" width="267" height="38" uuid="7d078960-6408-4524-98eb-dec4d69c50b1"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
@@ -888,6 +888,27 @@ where id =  $P{transferencia_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fechahora}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="8" y="230" width="106" height="10" uuid="ce512657-bfd1-424f-a724-4a868eb11605"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ORIGINAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="509" width="106" height="10" uuid="2623d388-b08c-4e98-bf92-9ddbe21a16f2"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DUPLICADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="779" width="106" height="10" uuid="408caad3-c197-48de-a737-b2e36e86b595"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[TRIPLICADO]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>

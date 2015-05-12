@@ -16,17 +16,20 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class NormalTableCellRenderer extends DefaultTableCellRenderer {
 
+    private boolean enProceso;
+
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        //System.out.println(String.valueOf(column) + " - " + table.getValueAt(row, column).toString());
-        if (table.getColumnCount() > 2 && table.getValueAt(row, 2) != null) {
-            if (table.getValueAt(row, 2).toString().equals("En Proceso...")) {
-                setBackground(Color.pink);
-                setForeground(Color.black);
-            } else {
-                setBackground(table.getBackground());
-                setForeground(table.getForeground());
+        if (enProceso) {
+            if (table.getValueAt(row, 2) != null) {
+                if (table.getValueAt(row, 2).toString().equals("En Proceso...")) {
+                    setBackground(Color.pink);
+                    setForeground(Color.black);
+                } else {
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                }
             }
         }
         if (isSelected) {
@@ -34,5 +37,19 @@ public class NormalTableCellRenderer extends DefaultTableCellRenderer {
             setForeground(table.getSelectionForeground());
         }
         return this;
+    }
+
+    /**
+     * @return the enProceso
+     */
+    public boolean isEnProceso() {
+        return enProceso;
+    }
+
+    /**
+     * @param enProceso the enProceso to set
+     */
+    public void setEnProceso(boolean enProceso) {
+        this.enProceso = enProceso;
     }
 }

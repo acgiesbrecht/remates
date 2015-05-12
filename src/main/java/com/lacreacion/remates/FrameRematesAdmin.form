@@ -195,7 +195,7 @@
         <BindingProperty name="text" source="masterTable" sourcePath="${selectedElement.descripcion}" target="descripcionField" targetPath="text" updateStrategy="0" immediately="false">
           <Property name="incompletePathValue" type="java.lang.String" value="null"/>
         </BindingProperty>
-        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="descripcionField" targetPath="enabled" updateStrategy="1" immediately="false"/>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="descripcionField" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
     </Component>
     <Component class="javax.swing.JButton" name="saveButton">
@@ -252,9 +252,13 @@
     <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePicker1">
       <BindingProperties>
         <BindingProperty name="date" source="masterTable" sourcePath="${selectedElement.fecha}" target="jXDatePicker1" targetPath="date" updateStrategy="0" immediately="false"/>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="jXDatePicker1" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
     </Component>
     <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePicker2">
+      <BindingProperties>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="jXDatePicker2" targetPath="enabled" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
     </Component>
   </SubComponents>
 </Form>

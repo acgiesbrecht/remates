@@ -80,6 +80,9 @@ public class FrameRematesDetalle extends JInternalFrame {
         queryRemates = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRemates t ORDER BY t.fecha");
         listRemates = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryRemates.getResultList());
         jXDatePicker1 = new org.jdesktop.swingx.JXDatePicker();
+        dateTimeTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
+        integerLongConverter1 = new com.lacreacion.remates.utils.IntegerLongConverter();
+        numberCellRenderer1 = new com.lacreacion.remates.utils.NumberCellRenderer();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         fechahoraLabel = new javax.swing.JLabel();
@@ -88,7 +91,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         observacionLabel = new javax.swing.JLabel();
         idMiembroLabel = new javax.swing.JLabel();
         fechahoraField = new javax.swing.JTextField();
-        montoField = new javax.swing.JTextField();
         observacionField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
@@ -107,10 +109,16 @@ public class FrameRematesDetalle extends JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cboFechaRemate = new javax.swing.JComboBox();
+        montoField = new javax.swing.JFormattedTextField();
 
         FormListener formListener = new FormListener();
 
         normalTableCellRenderer1.setText("normalTableCellRenderer1");
+
+        dateTimeTableCellRenderer1.setText("dateTimeTableCellRenderer1");
+
+        numberCellRenderer1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        numberCellRenderer1.setText("numberCellRenderer1");
 
         addInternalFrameListener(formListener);
 
@@ -138,11 +146,11 @@ public class FrameRematesDetalle extends JInternalFrame {
         jTableBinding.bind();
         masterScrollPane.setViewportView(masterTable);
         if (masterTable.getColumnModel().getColumnCount() > 0) {
-            masterTable.getColumnModel().getColumn(0).setCellRenderer(dateTableCellRenderer1);
+            masterTable.getColumnModel().getColumn(0).setCellRenderer(dateTimeTableCellRenderer1);
             masterTable.getColumnModel().getColumn(1).setCellRenderer(normalTableCellRenderer1);
             masterTable.getColumnModel().getColumn(2).setCellRenderer(normalTableCellRenderer1);
             masterTable.getColumnModel().getColumn(3).setCellRenderer(normalTableCellRenderer1);
-            masterTable.getColumnModel().getColumn(4).setCellRenderer(normalTableCellRenderer1);
+            masterTable.getColumnModel().getColumn(4).setCellRenderer(numberCellRenderer1);
         }
 
         fechahoraLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -166,15 +174,7 @@ public class FrameRematesDetalle extends JInternalFrame {
         binding.setSourceUnreadableValue("null");
         binding.setConverter(dateToStringConverter1);
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), fechahoraField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        montoField.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.monto}"), montoField, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        binding.setSourceUnreadableValue("null");
-        bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), montoField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), fechahoraField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         observacionField.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -209,6 +209,10 @@ public class FrameRematesDetalle extends JInternalFrame {
         idMiembroLabel1.setText("Cta. Cte.:");
 
         txtCtaCte.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), txtCtaCte, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
         txtCtaCte.addFocusListener(formListener);
         txtCtaCte.addActionListener(formListener);
         txtCtaCte.addKeyListener(formListener);
@@ -222,6 +226,8 @@ public class FrameRematesDetalle extends JInternalFrame {
         bindingGroup.addBinding(jComboBoxBinding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.idCategoria}"), cboCategoria, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), cboCategoria, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
 
         cboCategoria.addActionListener(formListener);
 
@@ -230,6 +236,8 @@ public class FrameRematesDetalle extends JInternalFrame {
         jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listMiembros, cboMiembro);
         bindingGroup.addBinding(jComboBoxBinding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.idMiembro}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -285,6 +293,19 @@ public class FrameRematesDetalle extends JInternalFrame {
 
         cboFechaRemate.addActionListener(formListener);
 
+        montoField.setColumns(9);
+        montoField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.monto}"), montoField, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding.setConverter(integerLongConverter1);
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), montoField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        montoField.addFocusListener(formListener);
+        montoField.addMouseListener(formListener);
+        montoField.addActionListener(formListener);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -314,8 +335,8 @@ public class FrameRematesDetalle extends JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(cboCategoria, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(montoField)
-                                    .addComponent(fechahoraField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(fechahoraField, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                    .addComponent(montoField))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(observacionField)
@@ -380,7 +401,7 @@ public class FrameRematesDetalle extends JInternalFrame {
                         .addComponent(dateTableCellRenderer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(deleteButton)
@@ -396,7 +417,7 @@ public class FrameRematesDetalle extends JInternalFrame {
 
     // Code for dispatching events from components to event handlers.
 
-    private class FormListener implements java.awt.event.ActionListener, java.awt.event.FocusListener, java.awt.event.KeyListener, javax.swing.event.InternalFrameListener {
+    private class FormListener implements java.awt.event.ActionListener, java.awt.event.FocusListener, java.awt.event.KeyListener, java.awt.event.MouseListener, javax.swing.event.InternalFrameListener {
         FormListener() {}
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             if (evt.getSource() == saveButton) {
@@ -420,11 +441,17 @@ public class FrameRematesDetalle extends JInternalFrame {
             else if (evt.getSource() == cboFechaRemate) {
                 FrameRematesDetalle.this.cboFechaRemateActionPerformed(evt);
             }
+            else if (evt.getSource() == montoField) {
+                FrameRematesDetalle.this.montoFieldActionPerformed(evt);
+            }
         }
 
         public void focusGained(java.awt.event.FocusEvent evt) {
             if (evt.getSource() == txtCtaCte) {
                 FrameRematesDetalle.this.txtCtaCteFocusGained(evt);
+            }
+            else if (evt.getSource() == montoField) {
+                FrameRematesDetalle.this.montoFieldFocusGained(evt);
             }
         }
 
@@ -447,6 +474,24 @@ public class FrameRematesDetalle extends JInternalFrame {
             if (evt.getSource() == txtCtaCte) {
                 FrameRematesDetalle.this.txtCtaCteKeyTyped(evt);
             }
+        }
+
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            if (evt.getSource() == montoField) {
+                FrameRematesDetalle.this.montoFieldMouseClicked(evt);
+            }
+        }
+
+        public void mouseEntered(java.awt.event.MouseEvent evt) {
+        }
+
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+        }
+
+        public void mousePressed(java.awt.event.MouseEvent evt) {
+        }
+
+        public void mouseReleased(java.awt.event.MouseEvent evt) {
         }
 
         public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -641,6 +686,18 @@ public class FrameRematesDetalle extends JInternalFrame {
         }
     }//GEN-LAST:event_cboFechaRemateActionPerformed
 
+    private void montoFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_montoFieldFocusGained
+
+    }//GEN-LAST:event_montoFieldFocusGained
+
+    private void montoFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_montoFieldMouseClicked
+
+    }//GEN-LAST:event_montoFieldMouseClicked
+
+    private void montoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_montoFieldActionPerformed
+
+    }//GEN-LAST:event_montoFieldActionPerformed
+
     private void getDatabaseIP() {
         try {
             databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
@@ -660,6 +717,7 @@ public class FrameRematesDetalle extends JInternalFrame {
     private javax.swing.JComboBox cboFechaRemate;
     private javax.swing.JComboBox cboMiembro;
     private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTableCellRenderer1;
+    private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTimeTableCellRenderer1;
     private com.lacreacion.remates.utils.DateToStringConverter dateToStringConverter1;
     private javax.swing.JButton deleteButton;
     private javax.persistence.EntityManager entityManager;
@@ -669,6 +727,7 @@ public class FrameRematesDetalle extends JInternalFrame {
     private javax.swing.JLabel idMiembroLabel;
     private javax.swing.JLabel idMiembroLabel1;
     private javax.swing.JLabel idMiembroLabel2;
+    private com.lacreacion.remates.utils.IntegerLongConverter integerLongConverter1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -681,10 +740,11 @@ public class FrameRematesDetalle extends JInternalFrame {
     private java.util.List<com.lacreacion.remates.domain.TblRematesDetalle> listRematesDetalle;
     private javax.swing.JScrollPane masterScrollPane;
     private javax.swing.JTable masterTable;
-    private javax.swing.JTextField montoField;
+    private javax.swing.JFormattedTextField montoField;
     private javax.swing.JLabel montoLabel;
     private javax.swing.JButton newButton;
     private com.lacreacion.remates.utils.NormalTableCellRenderer normalTableCellRenderer1;
+    private com.lacreacion.remates.utils.NumberCellRenderer numberCellRenderer1;
     private javax.swing.JTextField observacionField;
     private javax.swing.JLabel observacionLabel;
     private javax.persistence.Query queryMiembros;

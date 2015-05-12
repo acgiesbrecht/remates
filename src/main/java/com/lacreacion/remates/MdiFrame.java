@@ -53,6 +53,7 @@ public class MdiFrame extends javax.swing.JFrame {
         mnuCategorias = new javax.swing.JMenuItem();
         mnuMiembros1 = new javax.swing.JMenuItem();
         mnuMiembros2 = new javax.swing.JMenuItem();
+        mnuMiembros5 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
@@ -132,6 +133,14 @@ public class MdiFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(mnuMiembros2);
+
+        mnuMiembros5.setText("Administrar Iglesia");
+        mnuMiembros5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuMiembros5ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuMiembros5);
 
         jMenuItem5.setText("Configuracion del Sistema");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -288,6 +297,20 @@ public class MdiFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mnuMiembros4ActionPerformed
 
+    private void mnuMiembros5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMiembros5ActionPerformed
+        try {
+            FrameIglesiaAdmin frame = new FrameIglesiaAdmin();
+            frame.setVisible(true);
+
+            desktop.add(frame);
+
+            frame.setSelected(true);
+            frame.setMaximum(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }//GEN-LAST:event_mnuMiembros5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -342,6 +365,7 @@ public class MdiFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuMiembros2;
     private javax.swing.JMenuItem mnuMiembros3;
     private javax.swing.JMenuItem mnuMiembros4;
+    private javax.swing.JMenuItem mnuMiembros5;
     // End of variables declaration//GEN-END:variables
 
     /**

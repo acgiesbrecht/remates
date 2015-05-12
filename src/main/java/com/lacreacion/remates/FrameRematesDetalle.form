@@ -108,6 +108,19 @@
     </Component>
     <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePicker1">
     </Component>
+    <Component class="com.lacreacion.remates.utils.DateTimeTableCellRenderer" name="dateTimeTableCellRenderer1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="dateTimeTableCellRenderer1"/>
+      </Properties>
+    </Component>
+    <Component class="com.lacreacion.remates.utils.IntegerLongConverter" name="integerLongConverter1">
+    </Component>
+    <Component class="com.lacreacion.remates.utils.NumberCellRenderer" name="numberCellRenderer1">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="numberCellRenderer1"/>
+      </Properties>
+    </Component>
   </NonVisualComponents>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="2"/>
@@ -158,8 +171,8 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="cboCategoria" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="fechahoraField" alignment="0" pref="180" max="32767" attributes="0"/>
                                   <Component id="montoField" max="32767" attributes="0"/>
-                                  <Component id="fechahoraField" alignment="0" min="-2" pref="180" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
@@ -240,7 +253,7 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="23" max="32767" attributes="0"/>
+                      <EmptySpace pref="28" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
@@ -276,7 +289,7 @@
                   <Title/>
                   <Editor/>
                   <Renderer editor="org.netbeans.modules.form.ComponentChooserEditor">
-                    <ComponentRef name="dateTableCellRenderer1"/>
+                    <ComponentRef name="dateTimeTableCellRenderer1"/>
                   </Renderer>
                 </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -304,7 +317,7 @@
                   <Title/>
                   <Editor/>
                   <Renderer editor="org.netbeans.modules.form.ComponentChooserEditor">
-                    <ComponentRef name="normalTableCellRenderer1"/>
+                    <ComponentRef name="numberCellRenderer1"/>
                   </Renderer>
                 </Column>
               </TableColumnModel>
@@ -400,20 +413,7 @@
             <ComponentRef name="dateToStringConverter1"/>
           </Property>
         </BindingProperty>
-        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="fechahoraField" targetPath="enabled" updateStrategy="1" immediately="false"/>
-      </BindingProperties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="montoField">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tahoma" size="12" style="0"/>
-        </Property>
-      </Properties>
-      <BindingProperties>
-        <BindingProperty name="text" source="masterTable" sourcePath="${selectedElement.monto}" target="montoField" targetPath="text" updateStrategy="0" immediately="false">
-          <Property name="incompletePathValue" type="java.lang.String" value="null"/>
-        </BindingProperty>
-        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="montoField" targetPath="enabled" updateStrategy="1" immediately="false"/>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="fechahoraField" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
     </Component>
     <Component class="javax.swing.JTextField" name="observacionField">
@@ -506,6 +506,9 @@
           <Font name="Tahoma" size="12" style="0"/>
         </Property>
       </Properties>
+      <BindingProperties>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="txtCtaCte" targetPath="enabled" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
       <Events>
         <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCtaCteFocusGained"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCtaCteActionPerformed"/>
@@ -533,6 +536,7 @@
       <BindingProperties>
         <BindingProperty name="elements" source="tblRematesCategoriasList" target="cboCategoria" targetPath="elements" updateStrategy="0" immediately="false"/>
         <BindingProperty name="selectedItem" source="masterTable" sourcePath="${selectedElement.idCategoria}" target="cboCategoria" targetPath="selectedItem" updateStrategy="0" immediately="false"/>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="cboCategoria" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboCategoriaActionPerformed"/>
@@ -547,6 +551,7 @@
       <BindingProperties>
         <BindingProperty name="elements" source="listMiembros" target="cboMiembro" targetPath="elements" updateStrategy="0" immediately="false"/>
         <BindingProperty name="selectedItem" source="masterTable" sourcePath="${selectedElement.idMiembro}" target="cboMiembro" targetPath="selectedItem" updateStrategy="0" immediately="false"/>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="cboMiembro" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel1">
@@ -647,6 +652,27 @@
       </BindingProperties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboFechaRemateActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="montoField">
+      <Properties>
+        <Property name="columns" type="int" value="9"/>
+        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+          <Format subtype="1" type="0"/>
+        </Property>
+      </Properties>
+      <BindingProperties>
+        <BindingProperty name="value" source="masterTable" sourcePath="${selectedElement.monto}" target="montoField" targetPath="value" updateStrategy="0" immediately="false">
+          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+            <ComponentRef name="integerLongConverter1"/>
+          </Property>
+        </BindingProperty>
+        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="montoField" targetPath="enabled" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="montoFieldFocusGained"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="montoFieldMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="montoFieldActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -63,13 +63,14 @@ public class FrameTransferencias extends JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblTransferencias t");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
         dateToStringConverter1 = new com.lacreacion.remates.utils.DateToStringConverter();
         dateTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
+        entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+        numberCellRenderer1 = new com.lacreacion.remates.utils.NumberCellRenderer();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         fechahoraLabel = new javax.swing.JLabel();
@@ -94,6 +95,8 @@ public class FrameTransferencias extends JInternalFrame {
         FormListener formListener = new FormListener();
 
         dateTableCellRenderer1.setText("dateTableCellRenderer1");
+
+        numberCellRenderer1.setText("numberCellRenderer1");
 
         addInternalFrameListener(formListener);
 
@@ -120,6 +123,7 @@ public class FrameTransferencias extends JInternalFrame {
         masterScrollPane.setViewportView(masterTable);
         if (masterTable.getColumnModel().getColumnCount() > 0) {
             masterTable.getColumnModel().getColumn(1).setCellRenderer(dateTableCellRenderer1);
+            masterTable.getColumnModel().getColumn(4).setCellRenderer(numberCellRenderer1);
         }
 
         fechahoraLabel.setText("Fecha/Hora:");
@@ -556,6 +560,7 @@ public class FrameTransferencias extends JInternalFrame {
     private javax.swing.JLabel montoLabel;
     private javax.swing.JButton newButton;
     private javax.swing.JButton newButton1;
+    private com.lacreacion.remates.utils.NumberCellRenderer numberCellRenderer1;
     private javax.persistence.Query query;
     private javax.persistence.Query queryMiembros;
     private javax.swing.JButton refreshButton;

@@ -17,23 +17,4 @@ public class CtaCteTableCellRenderer extends NormalTableCellRenderer {
     public void setValue(Object value) {
         setText((value == null) ? "" : FormatCtaCte.format((int) value));
     }
-    /*
-     @Override
-     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-     super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-     //System.out.println(String.valueOf(column) + " - " + table.getValueAt(row, column).toString());
-
-     if (table.getValueAt(row, 2).toString().equals("En Proceso...")) {
-     setBackground(Color.pink);
-     setForeground(Color.black);
-     } else {
-     setBackground(table.getBackground());
-     setForeground(table.getForeground());
-     }
-     if (isSelected) {
-     setBackground(table.getSelectionBackground());
-     setForeground(table.getSelectionForeground());
-     }
-     return this;
-     }*/
 }

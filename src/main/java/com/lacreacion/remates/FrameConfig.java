@@ -65,13 +65,10 @@ public class FrameConfig extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        cboPrinter = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         txtIP = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -92,11 +89,6 @@ public class FrameConfig extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setText("Impresora:");
-        jLabel1.setEnabled(false);
-
-        cboPrinter.setEnabled(false);
-
         jLabel2.setText("Direccion IP de Base de datos:");
 
         jButton1.setText("Cancelar");
@@ -113,13 +105,6 @@ public class FrameConfig extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton3.setText("Cargar EXCEL de Miembros");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -128,19 +113,9 @@ public class FrameConfig extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtIP))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(cboPrinter, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtIP, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                         .addGap(283, 283, 283))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
@@ -153,15 +128,9 @@ public class FrameConfig extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(cboPrinter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 317, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 400, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -190,60 +159,6 @@ public class FrameConfig extends javax.swing.JInternalFrame {
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
         txtIP.setText(Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1"));
     }//GEN-LAST:event_formInternalFrameActivated
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-            JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog(this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                getDatabaseIP();
-                File file = fc.getSelectedFile();
-                POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
-                HSSFWorkbook wb = new HSSFWorkbook(fs);
-                HSSFSheet sheet = wb.getSheetAt(0);
-                HSSFRow row;
-                HSSFCell cell;
-
-                int rows; // No of rows
-                rows = sheet.getPhysicalNumberOfRows();
-
-                int cols = 0; // No of columns
-                int tmp = 0;
-
-                // This trick ensures that we get the data properly even if it doesn't start from first few rows
-                for (int i = 0; i < 10 || i < rows; i++) {
-                    row = sheet.getRow(i);
-                    if (row != null) {
-                        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-                        if (tmp > cols) {
-                            cols = tmp;
-                        }
-                    }
-                }
-
-                for (int r = 0; r < rows; r++) {
-                    row = sheet.getRow(r);
-                    if (row != null) {
-                        for (int c = 0; c < cols; c++) {
-                            cell = row.getCell((short) c);
-                            if (cell != null) {
-                                if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                                    System.out.println(cell.getStringCellValue());
-                                }
-                                if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                    System.out.println(cell.getNumericCellValue());
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,11 +201,8 @@ public class FrameConfig extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox cboPrinter;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField txtIP;
     // End of variables declaration//GEN-END:variables
