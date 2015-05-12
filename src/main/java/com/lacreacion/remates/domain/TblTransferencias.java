@@ -43,8 +43,9 @@ public class TblTransferencias implements Serializable {
     private Date fechahora;
     @Column(name = "concepto")
     private String concepto;
+    @Basic(optional = false)
     @Column(name = "monto")
-    private Integer monto;
+    private int monto;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -53,6 +54,9 @@ public class TblTransferencias implements Serializable {
     @JoinColumn(name = "id_miembro", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TblMiembros idMiembro;
+    @JoinColumn(name = "id_remate", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private TblRemates idRemate;
 
     public TblTransferencias() {
     }
@@ -61,9 +65,10 @@ public class TblTransferencias implements Serializable {
         this.id = id;
     }
 
-    public TblTransferencias(Integer id, Date fechahora) {
+    public TblTransferencias(Integer id, Date fechahora, int monto) {
         this.id = id;
         this.fechahora = fechahora;
+        this.monto = monto;
     }
 
     public Date getFechahora() {
@@ -82,11 +87,11 @@ public class TblTransferencias implements Serializable {
         this.concepto = concepto;
     }
 
-    public Integer getMonto() {
+    public int getMonto() {
         return monto;
     }
 
-    public void setMonto(Integer monto) {
+    public void setMonto(int monto) {
         this.monto = monto;
     }
 
@@ -104,6 +109,14 @@ public class TblTransferencias implements Serializable {
 
     public void setIdMiembro(TblMiembros idMiembro) {
         this.idMiembro = idMiembro;
+    }
+
+    public TblRemates getIdRemate() {
+        return idRemate;
+    }
+
+    public void setIdRemate(TblRemates idRemate) {
+        this.idRemate = idRemate;
     }
 
     @Override

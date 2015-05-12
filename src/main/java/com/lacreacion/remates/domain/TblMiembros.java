@@ -46,13 +46,13 @@ public class TblMiembros implements Serializable {
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
+    @Basic(optional = false)
     @Column(name = "ctacte")
     private Integer ctacte;
     @Column(name = "domicilio")
     private String domicilio;
-    @Basic(optional = false)
     @Column(name = "box")
-    private int box;
+    private Integer box;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
     private Collection<TblTransferencias> tblTransferenciasCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
@@ -67,10 +67,10 @@ public class TblMiembros implements Serializable {
         this.id = id;
     }
 
-    public TblMiembros(Integer id, String nombre, int box) {
+    public TblMiembros(Integer id, String nombre, int ctacte) {
         this.id = id;
         this.nombre = nombre;
-        this.box = box;
+        this.ctacte = ctacte;
     }
 
     public Integer getId() {
@@ -105,11 +105,11 @@ public class TblMiembros implements Serializable {
         this.domicilio = domicilio;
     }
 
-    public int getBox() {
+    public Integer getBox() {
         return box;
     }
 
-    public void setBox(int box) {
+    public void setBox(Integer box) {
         this.box = box;
     }
 

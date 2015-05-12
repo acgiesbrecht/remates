@@ -76,7 +76,6 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="idRemateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="fecha1Label" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="fecha2Label" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="fecha3Label" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -84,13 +83,10 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="idRemateField" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                                      <Component id="jXDatePicker1" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
-                                      <Component id="jXDatePicker2" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
-                                      <Component id="jXDatePicker3" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
-                                      <Component id="jXDatePicker4" min="-2" pref="146" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jXDatePicker1" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
+                                  <Component id="jXDatePicker2" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
+                                  <Component id="jXDatePicker3" alignment="1" min="-2" pref="146" max="-2" attributes="0"/>
+                                  <Component id="jXDatePicker4" min="-2" pref="146" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -106,13 +102,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="masterScrollPane" pref="130" max="32767" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="idRemateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="idRemateField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="masterScrollPane" pref="134" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jXDatePicker1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="fecha1Label" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -132,7 +123,7 @@
                   <Component id="jXDatePicker4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="fecha4Label" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="refreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -158,7 +149,7 @@
                   <Title/>
                   <Editor/>
                   <Renderer editor="org.netbeans.modules.form.ComponentChooserEditor">
-                    <ComponentRef name="dateTableCellRenderer1"/>
+                    <ComponentRef name="null"/>
                   </Renderer>
                 </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -197,25 +188,30 @@
           </Properties>
           <BindingProperties>
             <BindingProperty name="elements" source="list" target="masterTable" targetPath="elements" updateStrategy="0" immediately="true">
-              <Subbinding sourcePath="${tblRemates.fecha}">
+              <Subbinding sourcePath="${tblRemates}">
                 <BindingParameter name="NAME" value="Remate"/>
-                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="com.lacreacion.remates.domain.TblRemates.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${fecha1}">
                 <BindingParameter name="NAME" value="1&#xaa; Cuota"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${fecha2}">
                 <BindingParameter name="NAME" value="2&#xaa; Cuota"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${fecha3}">
                 <BindingParameter name="NAME" value="3&#xaa; Cuota"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${fecha4}">
                 <BindingParameter name="NAME" value="4&#xaa; Cuota"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
             </BindingProperty>
           </BindingProperties>
@@ -226,11 +222,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="idRemateLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Remate:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="fecha1Label">
       <Properties>
         <Property name="text" type="java.lang.String" value="Fecha 1&#xaa; Cuota:"/>
@@ -250,21 +241,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Fecha 4&#xaa; Cuota:"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="idRemateField">
-      <Properties>
-        <Property name="editable" type="boolean" value="false"/>
-      </Properties>
-      <BindingProperties>
-        <BindingProperty name="text" source="masterTable" sourcePath="${selectedElement.tblRemates.fecha}" target="idRemateField" targetPath="text" updateStrategy="0" immediately="false">
-          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-          <Property name="incompletePathValue" type="java.lang.String" value="null"/>
-          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
-            <ComponentRef name="dateToStringConverter1"/>
-          </Property>
-        </BindingProperty>
-        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="idRemateField" targetPath="enabled" updateStrategy="1" immediately="false"/>
-      </BindingProperties>
     </Component>
     <Component class="javax.swing.JButton" name="saveButton">
       <Properties>

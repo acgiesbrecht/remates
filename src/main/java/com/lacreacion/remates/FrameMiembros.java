@@ -75,7 +75,7 @@ public class FrameMiembros extends JInternalFrame {
         deleteButton = new javax.swing.JButton();
         ctacteLabel1 = new javax.swing.JLabel();
         direccionLabel1 = new javax.swing.JLabel();
-        direccionField1 = new javax.swing.JTextField();
+        ctacteField1 = new javax.swing.JTextField();
 
         FormListener formListener = new FormListener();
 
@@ -85,7 +85,7 @@ public class FrameMiembros extends JInternalFrame {
 
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, masterTable);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${id}"));
-        columnBinding.setColumnName("Id");
+        columnBinding.setColumnName("Nro");
         columnBinding.setColumnClass(Integer.class);
         columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nombre}"));
@@ -137,7 +137,7 @@ public class FrameMiembros extends JInternalFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.domicilio}"), direccionField, org.jdesktop.beansbinding.BeanProperty.create("text"));
         binding.setSourceUnreadableValue("null");
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), direccionField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), direccionField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         saveButton.setText("Guardar");
@@ -161,10 +161,12 @@ public class FrameMiembros extends JInternalFrame {
 
         direccionLabel1.setText("Casilla Correo:");
 
-        direccionField1.setEnabled(false);
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.box}"), direccionField1, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.box}"), ctacteField1, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), ctacteField1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        ctacteField1.addActionListener(formListener);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,7 +178,7 @@ public class FrameMiembros extends JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(direccionLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(direccionField1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ctacteField1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(newButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -213,7 +215,7 @@ public class FrameMiembros extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -240,7 +242,7 @@ public class FrameMiembros extends JInternalFrame {
                     .addComponent(deleteButton)
                     .addComponent(newButton)
                     .addComponent(direccionLabel1)
-                    .addComponent(direccionField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ctacteField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -263,6 +265,9 @@ public class FrameMiembros extends JInternalFrame {
             }
             else if (evt.getSource() == deleteButton) {
                 FrameMiembros.this.deleteButtonActionPerformed(evt);
+            }
+            else if (evt.getSource() == ctacteField1) {
+                FrameMiembros.this.ctacteField1ActionPerformed(evt);
             }
         }
 
@@ -362,6 +367,10 @@ public class FrameMiembros extends JInternalFrame {
         }
     }//GEN-LAST:event_refreshButtonActionPerformed
 
+    private void ctacteField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctacteField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ctacteField1ActionPerformed
+
     private void getDatabaseIP() {
         try {
             databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
@@ -378,11 +387,11 @@ public class FrameMiembros extends JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.lacreacion.remates.utils.CtaCteTableCellRenderer ctaCteTableCellRenderer1;
     private javax.swing.JTextField ctacteField;
+    private javax.swing.JTextField ctacteField1;
     private javax.swing.JLabel ctacteLabel;
     private javax.swing.JLabel ctacteLabel1;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextField direccionField;
-    private javax.swing.JTextField direccionField1;
     private javax.swing.JLabel direccionLabel;
     private javax.swing.JLabel direccionLabel1;
     private javax.persistence.EntityManager entityManager;

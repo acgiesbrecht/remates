@@ -52,6 +52,9 @@ public class TblRecibos implements Serializable {
     @JoinColumn(name = "id_miembro", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TblMiembros idMiembro;
+    @JoinColumn(name = "id_remate", referencedColumnName = "id")
+    @ManyToOne
+    private TblRemates idRemate;
 
     public TblRecibos() {
     }
@@ -98,6 +101,14 @@ public class TblRecibos implements Serializable {
 
     public void setIdMiembro(TblMiembros idMiembro) {
         this.idMiembro = idMiembro;
+    }
+
+    public TblRemates getIdRemate() {
+        return idRemate;
+    }
+
+    public void setIdRemate(TblRemates idRemate) {
+        this.idRemate = idRemate;
     }
 
     @Override
