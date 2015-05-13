@@ -521,8 +521,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
     void loadMiembro() {
         try {
             selectedMiembro = (TblMiembros) cboMiembro.getSelectedItem();
-            queryRematesDetalle = entityManager.createNativeQuery("SELECT r.* FROM tbl_remates_detalle r, tbl_miembros m WHERE r.id_remate = '" + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString() + "' AND r.id_miembro = "
-                    + selectedMiembro.getId().toString() + " ORDER BY r.fechahora", TblRematesDetalle.class);
+            queryRematesDetalle = entityManager.createNativeQuery("SELECT * FROM tbl_remates_detalle WHERE id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString() + " AND id_miembro = "
+                    + selectedMiembro.getId().toString() + " ORDER BY fechahora", TblRematesDetalle.class);
             listRematesDetalle.clear();
             listRematesDetalle.addAll(queryRematesDetalle.getResultList());
             if (listRematesDetalle.size() > 0) {
@@ -550,10 +550,12 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
             Integer pagosT;
             try {
+                System.out.println("SELECT sum(monto) AS total   FROM tbl_transferencias  WHERE id_miembro = " + selectedMiembro.getId().toString() + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString());
+
                 pagosT = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
                         + "   FROM tbl_transferencias"
-                        + "  WHERE id_miembro = " + selectedMiembro.getId().toString()).getSingleResult().toString()
-                        + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString());
+                        + "  WHERE id_miembro = " + selectedMiembro.getId().toString()
+                        + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString()).getSingleResult().toString());
             } catch (Exception ex) {
                 pagosT = 0;
             }
@@ -561,8 +563,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
             try {
                 pagosR = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
                         + " FROM tbl_recibos"
-                        + " WHERE id_miembro = " + selectedMiembro.getId().toString()).getSingleResult().toString()
-                        + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString());
+                        + " WHERE id_miembro = " + selectedMiembro.getId().toString()
+                        + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString()).getSingleResult().toString());
             } catch (Exception ex) {
                 pagosR = 0;
             }
@@ -574,8 +576,13 @@ public class FramePagos extends javax.swing.JInternalFrame {
             saldoActual = deuda - pagos;
             lblSaldo.setText(String.format("%(,d", saldoActual));
 
-            txtTransferencia.setText(String.format("%d", deuda - pagos));
-            txtRecibo.setText("0");
+            txtTransferencia.setValue(deuda - pagos);
+            txtRecibo.setValue(0);
+
+            txtTransferencia.setSelectionStart(0);
+            txtTransferencia.setSelectionEnd(txtTransferencia.getText().length());
+
+            txtTransferencia.requestFocus();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -642,6 +649,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 }
 
             }
+
             Integer reciboMonto = ((Number) txtRecibo.getValue()).intValue();
             if (reciboMonto > 0) {
                 TblRecibos recibo = new TblRecibos();
@@ -671,6 +679,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_cmdProcesarActionPerformed
 

@@ -86,10 +86,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="descripcionField" pref="315" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jXDatePicker1" min="-2" pref="146" max="-2" attributes="0"/>
-                                          <Component id="jXDatePicker2" min="-2" pref="146" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jXDatePicker1" min="-2" pref="146" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -106,20 +103,18 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="masterScrollPane" pref="104" max="32767" attributes="0"/>
+              <Component id="masterScrollPane" pref="108" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="fechaLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jXDatePicker1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jXDatePicker2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="descripcionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="descripcionField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="1"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="refreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -253,11 +248,6 @@
       <BindingProperties>
         <BindingProperty name="date" source="masterTable" sourcePath="${selectedElement.fecha}" target="jXDatePicker1" targetPath="date" updateStrategy="0" immediately="false"/>
         <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="jXDatePicker1" targetPath="enabled" updateStrategy="0" immediately="false"/>
-      </BindingProperties>
-    </Component>
-    <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePicker2">
-      <BindingProperties>
-        <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="jXDatePicker2" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
     </Component>
   </SubComponents>

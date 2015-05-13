@@ -2,29 +2,9 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.2.3
--- Dumped by pg_dump version 9.3.1
--- Started on 2015-05-11 20:26:25
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-
-DROP DATABASE remate;
---
--- TOC entry 2018 (class 1262 OID 44555)
--- Name: remate; Type: DATABASE; Schema: -; Owner: postgres
---
-
-CREATE DATABASE remate WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Spanish_Paraguay.1252' LC_CTYPE = 'Spanish_Paraguay.1252';
-
-
-ALTER DATABASE remate OWNER TO postgres;
-
-\connect remate
+-- Dumped from database version 9.3.5
+-- Dumped by pg_dump version 9.4rc1
+-- Started on 2015-05-12 17:28:50
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -34,26 +14,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 6 (class 2615 OID 2200)
--- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
---
-
-CREATE SCHEMA public;
-
-
-ALTER SCHEMA public OWNER TO postgres;
-
---
--- TOC entry 2019 (class 0 OID 0)
--- Dependencies: 6
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON SCHEMA public IS 'standard public schema';
-
-
---
--- TOC entry 190 (class 3079 OID 11727)
+-- TOC entry 192 (class 3079 OID 11750)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -61,8 +22,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2021 (class 0 OID 0)
--- Dependencies: 190
+-- TOC entry 2037 (class 0 OID 0)
+-- Dependencies: 192
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -76,7 +37,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 168 (class 1259 OID 44556)
+-- TOC entry 170 (class 1259 OID 24853)
 -- Name: tbl_miembros; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -89,10 +50,10 @@ CREATE TABLE tbl_miembros (
 );
 
 
-ALTER TABLE public.tbl_miembros OWNER TO postgres;
+ALTER TABLE tbl_miembros OWNER TO postgres;
 
 --
--- TOC entry 169 (class 1259 OID 44562)
+-- TOC entry 171 (class 1259 OID 24859)
 -- Name: tbl_recibos; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -106,21 +67,28 @@ CREATE TABLE tbl_recibos (
 );
 
 
-ALTER TABLE public.tbl_recibos OWNER TO postgres;
+ALTER TABLE tbl_recibos OWNER TO postgres;
 
 --
--- TOC entry 170 (class 1259 OID 44568)
+-- TOC entry 172 (class 1259 OID 24865)
 -- Name: recibo; Type: VIEW; Schema: public; Owner: postgres
 --
 
 CREATE VIEW recibo AS
-SELECT r.id, r.fechahora, d.nombre, r.concepto, r.monto FROM tbl_recibos r, tbl_miembros d WHERE (r.id_miembro = d.id);
+ SELECT r.id,
+    r.fechahora,
+    d.nombre,
+    r.concepto,
+    r.monto
+   FROM tbl_recibos r,
+    tbl_miembros d
+  WHERE (r.id_miembro = d.id);
 
 
-ALTER TABLE public.recibo OWNER TO postgres;
+ALTER TABLE recibo OWNER TO postgres;
 
 --
--- TOC entry 171 (class 1259 OID 44572)
+-- TOC entry 173 (class 1259 OID 24869)
 -- Name: tbl_remates_categorias; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -130,10 +98,10 @@ CREATE TABLE tbl_remates_categorias (
 );
 
 
-ALTER TABLE public.tbl_remates_categorias OWNER TO postgres;
+ALTER TABLE tbl_remates_categorias OWNER TO postgres;
 
 --
--- TOC entry 172 (class 1259 OID 44578)
+-- TOC entry 174 (class 1259 OID 24875)
 -- Name: tbl_categorias_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -145,11 +113,11 @@ CREATE SEQUENCE tbl_categorias_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_categorias_id_seq OWNER TO postgres;
+ALTER TABLE tbl_categorias_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2022 (class 0 OID 0)
--- Dependencies: 172
+-- TOC entry 2038 (class 0 OID 0)
+-- Dependencies: 174
 -- Name: tbl_categorias_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -157,7 +125,7 @@ ALTER SEQUENCE tbl_categorias_id_seq OWNED BY tbl_remates_categorias.id;
 
 
 --
--- TOC entry 173 (class 1259 OID 44580)
+-- TOC entry 175 (class 1259 OID 24877)
 -- Name: tbl_iglesia; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -171,10 +139,10 @@ CREATE TABLE tbl_iglesia (
 );
 
 
-ALTER TABLE public.tbl_iglesia OWNER TO postgres;
+ALTER TABLE tbl_iglesia OWNER TO postgres;
 
 --
--- TOC entry 174 (class 1259 OID 44586)
+-- TOC entry 176 (class 1259 OID 24883)
 -- Name: tbl_iglesia_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -186,11 +154,11 @@ CREATE SEQUENCE tbl_iglesia_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_iglesia_id_seq OWNER TO postgres;
+ALTER TABLE tbl_iglesia_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2023 (class 0 OID 0)
--- Dependencies: 174
+-- TOC entry 2039 (class 0 OID 0)
+-- Dependencies: 176
 -- Name: tbl_iglesia_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -198,7 +166,7 @@ ALTER SEQUENCE tbl_iglesia_id_seq OWNED BY tbl_iglesia.id;
 
 
 --
--- TOC entry 175 (class 1259 OID 44588)
+-- TOC entry 177 (class 1259 OID 24885)
 -- Name: tbl_miembros_box_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -210,11 +178,11 @@ CREATE SEQUENCE tbl_miembros_box_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_miembros_box_seq OWNER TO postgres;
+ALTER TABLE tbl_miembros_box_seq OWNER TO postgres;
 
 --
--- TOC entry 2024 (class 0 OID 0)
--- Dependencies: 175
+-- TOC entry 2040 (class 0 OID 0)
+-- Dependencies: 177
 -- Name: tbl_miembros_box_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -222,7 +190,7 @@ ALTER SEQUENCE tbl_miembros_box_seq OWNED BY tbl_miembros.box;
 
 
 --
--- TOC entry 176 (class 1259 OID 44590)
+-- TOC entry 178 (class 1259 OID 24887)
 -- Name: tbl_miembros_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -234,11 +202,11 @@ CREATE SEQUENCE tbl_miembros_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_miembros_id_seq OWNER TO postgres;
+ALTER TABLE tbl_miembros_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2025 (class 0 OID 0)
--- Dependencies: 176
+-- TOC entry 2041 (class 0 OID 0)
+-- Dependencies: 178
 -- Name: tbl_miembros_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -246,7 +214,7 @@ ALTER SEQUENCE tbl_miembros_id_seq OWNED BY tbl_miembros.id;
 
 
 --
--- TOC entry 177 (class 1259 OID 44592)
+-- TOC entry 179 (class 1259 OID 24889)
 -- Name: tbl_recibos_id_miembro_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -258,11 +226,11 @@ CREATE SEQUENCE tbl_recibos_id_miembro_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_recibos_id_miembro_seq OWNER TO postgres;
+ALTER TABLE tbl_recibos_id_miembro_seq OWNER TO postgres;
 
 --
--- TOC entry 2026 (class 0 OID 0)
--- Dependencies: 177
+-- TOC entry 2042 (class 0 OID 0)
+-- Dependencies: 179
 -- Name: tbl_recibos_id_miembro_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -270,7 +238,7 @@ ALTER SEQUENCE tbl_recibos_id_miembro_seq OWNED BY tbl_recibos.id_miembro;
 
 
 --
--- TOC entry 178 (class 1259 OID 44594)
+-- TOC entry 180 (class 1259 OID 24891)
 -- Name: tbl_recibos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -282,11 +250,11 @@ CREATE SEQUENCE tbl_recibos_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_recibos_id_seq OWNER TO postgres;
+ALTER TABLE tbl_recibos_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2027 (class 0 OID 0)
--- Dependencies: 178
+-- TOC entry 2043 (class 0 OID 0)
+-- Dependencies: 180
 -- Name: tbl_recibos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -294,7 +262,7 @@ ALTER SEQUENCE tbl_recibos_id_seq OWNED BY tbl_recibos.id;
 
 
 --
--- TOC entry 179 (class 1259 OID 44596)
+-- TOC entry 181 (class 1259 OID 24893)
 -- Name: tbl_remates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -305,10 +273,10 @@ CREATE TABLE tbl_remates (
 );
 
 
-ALTER TABLE public.tbl_remates OWNER TO postgres;
+ALTER TABLE tbl_remates OWNER TO postgres;
 
 --
--- TOC entry 180 (class 1259 OID 44602)
+-- TOC entry 182 (class 1259 OID 24899)
 -- Name: tbl_remates_cuotas; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -321,10 +289,10 @@ CREATE TABLE tbl_remates_cuotas (
 );
 
 
-ALTER TABLE public.tbl_remates_cuotas OWNER TO postgres;
+ALTER TABLE tbl_remates_cuotas OWNER TO postgres;
 
 --
--- TOC entry 181 (class 1259 OID 44605)
+-- TOC entry 183 (class 1259 OID 24902)
 -- Name: tbl_remates_detalle; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -339,10 +307,10 @@ CREATE TABLE tbl_remates_detalle (
 );
 
 
-ALTER TABLE public.tbl_remates_detalle OWNER TO postgres;
+ALTER TABLE tbl_remates_detalle OWNER TO postgres;
 
 --
--- TOC entry 182 (class 1259 OID 44612)
+-- TOC entry 184 (class 1259 OID 24909)
 -- Name: tbl_remates_id_categoria_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -354,11 +322,11 @@ CREATE SEQUENCE tbl_remates_id_categoria_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_remates_id_categoria_seq OWNER TO postgres;
+ALTER TABLE tbl_remates_id_categoria_seq OWNER TO postgres;
 
 --
--- TOC entry 2028 (class 0 OID 0)
--- Dependencies: 182
+-- TOC entry 2044 (class 0 OID 0)
+-- Dependencies: 184
 -- Name: tbl_remates_id_categoria_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -366,7 +334,7 @@ ALTER SEQUENCE tbl_remates_id_categoria_seq OWNED BY tbl_remates_detalle.id_cate
 
 
 --
--- TOC entry 183 (class 1259 OID 44614)
+-- TOC entry 185 (class 1259 OID 24911)
 -- Name: tbl_remates_id_miembro_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -378,11 +346,11 @@ CREATE SEQUENCE tbl_remates_id_miembro_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_remates_id_miembro_seq OWNER TO postgres;
+ALTER TABLE tbl_remates_id_miembro_seq OWNER TO postgres;
 
 --
--- TOC entry 2029 (class 0 OID 0)
--- Dependencies: 183
+-- TOC entry 2045 (class 0 OID 0)
+-- Dependencies: 185
 -- Name: tbl_remates_id_miembro_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -390,7 +358,7 @@ ALTER SEQUENCE tbl_remates_id_miembro_seq OWNED BY tbl_remates_detalle.id_miembr
 
 
 --
--- TOC entry 184 (class 1259 OID 44616)
+-- TOC entry 186 (class 1259 OID 24913)
 -- Name: tbl_remates_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -402,11 +370,11 @@ CREATE SEQUENCE tbl_remates_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_remates_id_seq OWNER TO postgres;
+ALTER TABLE tbl_remates_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2030 (class 0 OID 0)
--- Dependencies: 184
+-- TOC entry 2046 (class 0 OID 0)
+-- Dependencies: 186
 -- Name: tbl_remates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -414,7 +382,7 @@ ALTER SEQUENCE tbl_remates_id_seq OWNED BY tbl_remates_detalle.id;
 
 
 --
--- TOC entry 185 (class 1259 OID 44618)
+-- TOC entry 187 (class 1259 OID 24915)
 -- Name: tbl_remates_id_seq1; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -426,11 +394,11 @@ CREATE SEQUENCE tbl_remates_id_seq1
     CACHE 1;
 
 
-ALTER TABLE public.tbl_remates_id_seq1 OWNER TO postgres;
+ALTER TABLE tbl_remates_id_seq1 OWNER TO postgres;
 
 --
--- TOC entry 2031 (class 0 OID 0)
--- Dependencies: 185
+-- TOC entry 2047 (class 0 OID 0)
+-- Dependencies: 187
 -- Name: tbl_remates_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -438,7 +406,7 @@ ALTER SEQUENCE tbl_remates_id_seq1 OWNED BY tbl_remates.id;
 
 
 --
--- TOC entry 186 (class 1259 OID 44620)
+-- TOC entry 188 (class 1259 OID 24917)
 -- Name: tbl_transferencias; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -452,10 +420,10 @@ CREATE TABLE tbl_transferencias (
 );
 
 
-ALTER TABLE public.tbl_transferencias OWNER TO postgres;
+ALTER TABLE tbl_transferencias OWNER TO postgres;
 
 --
--- TOC entry 187 (class 1259 OID 44626)
+-- TOC entry 189 (class 1259 OID 24923)
 -- Name: tbl_transferencias_id_miembro_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -467,11 +435,11 @@ CREATE SEQUENCE tbl_transferencias_id_miembro_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_transferencias_id_miembro_seq OWNER TO postgres;
+ALTER TABLE tbl_transferencias_id_miembro_seq OWNER TO postgres;
 
 --
--- TOC entry 2032 (class 0 OID 0)
--- Dependencies: 187
+-- TOC entry 2048 (class 0 OID 0)
+-- Dependencies: 189
 -- Name: tbl_transferencias_id_miembro_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -479,7 +447,7 @@ ALTER SEQUENCE tbl_transferencias_id_miembro_seq OWNED BY tbl_transferencias.id_
 
 
 --
--- TOC entry 188 (class 1259 OID 44628)
+-- TOC entry 190 (class 1259 OID 24925)
 -- Name: tbl_transferencias_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -491,11 +459,11 @@ CREATE SEQUENCE tbl_transferencias_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tbl_transferencias_id_seq OWNER TO postgres;
+ALTER TABLE tbl_transferencias_id_seq OWNER TO postgres;
 
 --
--- TOC entry 2033 (class 0 OID 0)
--- Dependencies: 188
+-- TOC entry 2049 (class 0 OID 0)
+-- Dependencies: 190
 -- Name: tbl_transferencias_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -503,18 +471,30 @@ ALTER SEQUENCE tbl_transferencias_id_seq OWNED BY tbl_transferencias.id;
 
 
 --
--- TOC entry 189 (class 1259 OID 44630)
+-- TOC entry 191 (class 1259 OID 24927)
 -- Name: transferencia; Type: VIEW; Schema: public; Owner: postgres
 --
 
 CREATE VIEW transferencia AS
-SELECT t.id, t.fechahora, d.ctacte AS cta_debito, i.ctacte AS cta_credito, d.nombre AS d_nombre, i.nombre AS c_nombre, d.domicilio AS d_domicilio, i.domicilio AS c_domicilio, t.monto FROM tbl_transferencias t, tbl_miembros d, tbl_iglesia i WHERE ((t.id_miembro = d.id) AND (i.id = 1));
+ SELECT t.id,
+    t.fechahora,
+    d.ctacte AS cta_debito,
+    i.ctacte AS cta_credito,
+    d.nombre AS d_nombre,
+    i.nombre AS c_nombre,
+    d.domicilio AS d_domicilio,
+    i.domicilio AS c_domicilio,
+    t.monto
+   FROM tbl_transferencias t,
+    tbl_miembros d,
+    tbl_iglesia i
+  WHERE ((t.id_miembro = d.id) AND (i.id = 1));
 
 
-ALTER TABLE public.transferencia OWNER TO postgres;
+ALTER TABLE transferencia OWNER TO postgres;
 
 --
--- TOC entry 1875 (class 2604 OID 44634)
+-- TOC entry 1888 (class 2604 OID 24931)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -522,7 +502,7 @@ ALTER TABLE ONLY tbl_miembros ALTER COLUMN id SET DEFAULT nextval('tbl_miembros_
 
 
 --
--- TOC entry 1876 (class 2604 OID 44636)
+-- TOC entry 1889 (class 2604 OID 24932)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -530,7 +510,7 @@ ALTER TABLE ONLY tbl_recibos ALTER COLUMN id SET DEFAULT nextval('tbl_recibos_id
 
 
 --
--- TOC entry 1878 (class 2604 OID 44637)
+-- TOC entry 1891 (class 2604 OID 24933)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -538,7 +518,7 @@ ALTER TABLE ONLY tbl_remates ALTER COLUMN id SET DEFAULT nextval('tbl_remates_id
 
 
 --
--- TOC entry 1877 (class 2604 OID 44638)
+-- TOC entry 1890 (class 2604 OID 24934)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -546,7 +526,7 @@ ALTER TABLE ONLY tbl_remates_categorias ALTER COLUMN id SET DEFAULT nextval('tbl
 
 
 --
--- TOC entry 1880 (class 2604 OID 44639)
+-- TOC entry 1893 (class 2604 OID 24935)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -554,7 +534,7 @@ ALTER TABLE ONLY tbl_remates_detalle ALTER COLUMN id SET DEFAULT nextval('tbl_re
 
 
 --
--- TOC entry 1881 (class 2604 OID 44640)
+-- TOC entry 1894 (class 2604 OID 24936)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -562,7 +542,7 @@ ALTER TABLE ONLY tbl_transferencias ALTER COLUMN id SET DEFAULT nextval('tbl_tra
 
 
 --
--- TOC entry 1887 (class 2606 OID 44642)
+-- TOC entry 1902 (class 2606 OID 24938)
 -- Name: pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -571,7 +551,7 @@ ALTER TABLE ONLY tbl_remates_categorias
 
 
 --
--- TOC entry 1889 (class 2606 OID 44644)
+-- TOC entry 1904 (class 2606 OID 24940)
 -- Name: tbl_iglesia_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -580,7 +560,16 @@ ALTER TABLE ONLY tbl_iglesia
 
 
 --
--- TOC entry 1883 (class 2606 OID 44646)
+-- TOC entry 1896 (class 2606 OID 25011)
+-- Name: tbl_miembros_ctacte_nombre_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_miembros
+    ADD CONSTRAINT tbl_miembros_ctacte_nombre_key UNIQUE (ctacte, nombre);
+
+
+--
+-- TOC entry 1898 (class 2606 OID 24942)
 -- Name: tbl_miembros_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -589,7 +578,7 @@ ALTER TABLE ONLY tbl_miembros
 
 
 --
--- TOC entry 1885 (class 2606 OID 44648)
+-- TOC entry 1900 (class 2606 OID 24944)
 -- Name: tbl_recibos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -598,7 +587,7 @@ ALTER TABLE ONLY tbl_recibos
 
 
 --
--- TOC entry 1893 (class 2606 OID 44650)
+-- TOC entry 1908 (class 2606 OID 24946)
 -- Name: tbl_remates_cuotas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -607,7 +596,7 @@ ALTER TABLE ONLY tbl_remates_cuotas
 
 
 --
--- TOC entry 1895 (class 2606 OID 44652)
+-- TOC entry 1910 (class 2606 OID 24948)
 -- Name: tbl_remates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -616,7 +605,7 @@ ALTER TABLE ONLY tbl_remates_detalle
 
 
 --
--- TOC entry 1891 (class 2606 OID 44654)
+-- TOC entry 1906 (class 2606 OID 24950)
 -- Name: tbl_remates_pkey1; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -625,7 +614,7 @@ ALTER TABLE ONLY tbl_remates
 
 
 --
--- TOC entry 1897 (class 2606 OID 44656)
+-- TOC entry 1912 (class 2606 OID 24952)
 -- Name: tbl_transferencias_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -634,7 +623,7 @@ ALTER TABLE ONLY tbl_transferencias
 
 
 --
--- TOC entry 1898 (class 2606 OID 44688)
+-- TOC entry 1913 (class 2606 OID 24953)
 -- Name: tbl_recibos_id_miembro_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -643,7 +632,7 @@ ALTER TABLE ONLY tbl_recibos
 
 
 --
--- TOC entry 1899 (class 2606 OID 44693)
+-- TOC entry 1914 (class 2606 OID 24958)
 -- Name: tbl_recibos_id_remate_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -652,7 +641,7 @@ ALTER TABLE ONLY tbl_recibos
 
 
 --
--- TOC entry 1900 (class 2606 OID 44662)
+-- TOC entry 1915 (class 2606 OID 24963)
 -- Name: tbl_remates_cuotas_id_remate_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -661,7 +650,7 @@ ALTER TABLE ONLY tbl_remates_cuotas
 
 
 --
--- TOC entry 1901 (class 2606 OID 44667)
+-- TOC entry 1916 (class 2606 OID 24968)
 -- Name: tbl_remates_detalle_id_remate_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -670,7 +659,7 @@ ALTER TABLE ONLY tbl_remates_detalle
 
 
 --
--- TOC entry 1902 (class 2606 OID 44672)
+-- TOC entry 1917 (class 2606 OID 24973)
 -- Name: tbl_remates_id_categoria_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -679,7 +668,7 @@ ALTER TABLE ONLY tbl_remates_detalle
 
 
 --
--- TOC entry 1903 (class 2606 OID 44677)
+-- TOC entry 1918 (class 2606 OID 24978)
 -- Name: tbl_remates_id_miembro_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -688,7 +677,7 @@ ALTER TABLE ONLY tbl_remates_detalle
 
 
 --
--- TOC entry 1904 (class 2606 OID 44703)
+-- TOC entry 1919 (class 2606 OID 24983)
 -- Name: tbl_transferencias_id_miembro_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -697,7 +686,7 @@ ALTER TABLE ONLY tbl_transferencias
 
 
 --
--- TOC entry 1905 (class 2606 OID 44708)
+-- TOC entry 1920 (class 2606 OID 24988)
 -- Name: tbl_transferencias_id_remate_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -706,7 +695,7 @@ ALTER TABLE ONLY tbl_transferencias
 
 
 --
--- TOC entry 2020 (class 0 OID 0)
+-- TOC entry 2036 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -717,7 +706,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2015-05-11 20:26:27
+-- Completed on 2015-05-12 17:28:51
 
 --
 -- PostgreSQL database dump complete

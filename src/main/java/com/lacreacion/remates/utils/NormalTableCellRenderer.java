@@ -16,25 +16,26 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class NormalTableCellRenderer extends DefaultTableCellRenderer {
 
-    private boolean enProceso;
+    private boolean enProceso = false;
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (enProceso) {
-            if (table.getValueAt(row, 2) != null) {
-                if (table.getValueAt(row, 2).toString().equals("En Proceso...")) {
-                    setBackground(Color.pink);
-                    setForeground(Color.black);
-                } else {
-                    setBackground(table.getBackground());
-                    setForeground(table.getForeground());
-                }
+        if (this.isEnProceso()) {
+            //if (table.getValueAt(row, 2) != null) {
+            if (table.getValueAt(row, 1).toString().equals("En Proceso...")) {
+                setBackground(Color.pink);
+                setForeground(Color.black);
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
             }
-        }
-        if (isSelected) {
-            setBackground(table.getSelectionBackground());
-            setForeground(table.getSelectionForeground());
+            //}
+
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            }
         }
         return this;
     }

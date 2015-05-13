@@ -43,6 +43,9 @@ public class FrameRematesDetalle extends JInternalFrame {
         try {
             getDatabaseIP();
             initComponents();
+            this.dateTimeTableCellRenderer1.setEnProceso(true);
+            this.numberCellRenderer1.setEnProceso(true);
+            this.normalTableCellRenderer1.setEnProceso(true);
 
             if (!Beans.isDesignTime()) {
                 entityManager.getTransaction().begin();
@@ -70,7 +73,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         queryRematesDetalle = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesDetalle t ORDER BY t.fechahora");
         listRematesDetalle = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryRematesDetalle.getResultList());
-        dateToStringConverter1 = new com.lacreacion.remates.utils.DateToStringConverter();
         tblRematesCategoriasQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesCategorias t ORDER BY t.descripcion");
         tblRematesCategoriasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(tblRematesCategoriasQuery.getResultList());
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
@@ -83,6 +85,7 @@ public class FrameRematesDetalle extends JInternalFrame {
         dateTimeTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
         integerLongConverter1 = new com.lacreacion.remates.utils.IntegerLongConverter();
         numberCellRenderer1 = new com.lacreacion.remates.utils.NumberCellRenderer();
+        dateTimeToStringConverter1 = new com.lacreacion.remates.utils.DateTimeToStringConverter();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         fechahoraLabel = new javax.swing.JLabel();
@@ -172,7 +175,7 @@ public class FrameRematesDetalle extends JInternalFrame {
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.fechahora}"), fechahoraField, org.jdesktop.beansbinding.BeanProperty.create("text"));
         binding.setSourceUnreadableValue("null");
-        binding.setConverter(dateToStringConverter1);
+        binding.setConverter(dateTimeToStringConverter1);
         bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), fechahoraField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -718,7 +721,7 @@ public class FrameRematesDetalle extends JInternalFrame {
     private javax.swing.JComboBox cboMiembro;
     private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTableCellRenderer1;
     private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTimeTableCellRenderer1;
-    private com.lacreacion.remates.utils.DateToStringConverter dateToStringConverter1;
+    private com.lacreacion.remates.utils.DateTimeToStringConverter dateTimeToStringConverter1;
     private javax.swing.JButton deleteButton;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JTextField fechahoraField;

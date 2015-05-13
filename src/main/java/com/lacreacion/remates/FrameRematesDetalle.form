@@ -37,8 +37,6 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="2"/>
       </AuxValues>
     </Component>
-    <Component class="com.lacreacion.remates.utils.DateToStringConverter" name="dateToStringConverter1">
-    </Component>
     <Component class="javax.persistence.Query" name="tblRematesCategoriasQuery">
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT t FROM TblRematesCategorias t ORDER BY t.descripcion"/>
@@ -120,6 +118,8 @@
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" value="numberCellRenderer1"/>
       </Properties>
+    </Component>
+    <Component class="com.lacreacion.remates.utils.DateTimeToStringConverter" name="dateTimeToStringConverter1">
     </Component>
   </NonVisualComponents>
   <SyntheticProperties>
@@ -410,7 +410,7 @@
           <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
           <Property name="incompletePathValue" type="java.lang.String" value="null"/>
           <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
-            <ComponentRef name="dateToStringConverter1"/>
+            <ComponentRef name="dateTimeToStringConverter1"/>
           </Property>
         </BindingProperty>
         <BindingProperty name="enabled" source="masterTable" sourcePath="${selectedElement != null}" target="fechahoraField" targetPath="enabled" updateStrategy="0" immediately="false"/>
