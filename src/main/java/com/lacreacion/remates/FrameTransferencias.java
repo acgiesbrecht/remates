@@ -63,13 +63,13 @@ public class FrameTransferencias extends JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblTransferencias t");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
         dateToStringConverter1 = new com.lacreacion.remates.utils.DateToStringConverter();
         dateTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
-        entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         numberCellRenderer1 = new com.lacreacion.remates.utils.NumberCellRenderer();
         masterScrollPane = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();

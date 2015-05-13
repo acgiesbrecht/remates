@@ -2,6 +2,14 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <NonVisualComponents>
+    <Component class="javax.persistence.EntityManager" name="entityManager">
+      <Properties>
+        <Property name="persistenceUnit" type="java.lang.String" value="remates_PU"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory(&quot;remates_PU&quot;, persistenceMap).createEntityManager();"/>
+      </AuxValues>
+    </Component>
     <Component class="javax.persistence.Query" name="query">
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT t FROM TblTransferencias t"/>
@@ -49,14 +57,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="dateTableCellRenderer1"/>
       </Properties>
-    </Component>
-    <Component class="javax.persistence.EntityManager" name="entityManager">
-      <Properties>
-        <Property name="persistenceUnit" type="java.lang.String" value="remates_PU"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory(&quot;remates_PU&quot;, persistenceMap).createEntityManager();"/>
-      </AuxValues>
     </Component>
     <Component class="com.lacreacion.remates.utils.NumberCellRenderer" name="numberCellRenderer1">
       <Properties>

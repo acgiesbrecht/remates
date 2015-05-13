@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.1.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-05-12T13:51:36 -->
+<!-- 2015-05-13T15:09:06 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transferencia" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="78c20e98-1bd9-416f-bdbe-337f3341ab83">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="RematePG"/>
 	<parameter name="transferencia_id" class="java.lang.Integer"/>
@@ -19,11 +19,31 @@ where id =  $P{transferencia_id}]]>
 	<field name="c_nombre" class="java.lang.String"/>
 	<field name="d_domicilio" class="java.lang.String"/>
 	<field name="c_domicilio" class="java.lang.String"/>
+	<field name="d_box" class="java.lang.Integer"/>
+	<field name="c_box" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
 		<band height="801" splitType="Stretch">
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="5" y="377" width="267" height="38" uuid="f4070940-9d68-4e0c-ac1f-09295056a6d4"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="0" y="550" width="557" height="240" uuid="9fa35439-0227-45f6-9006-48db36a7f23a"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="-1" y="280" width="557" height="240" uuid="971c6ab3-57f0-4701-bed9-6e167c8a2c17"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="5" y="420" width="267" height="38" uuid="31a4c77d-acbe-47e2-81ec-7b05969d24bd"/>
 				<graphicElement>
@@ -259,7 +279,7 @@ where id =  $P{transferencia_id}]]>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{d_domicilio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{d_domicilio}!=null ? "" : $F{d_domicilio} + " - C.d.C. " + $F{d_box}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="42" y="80" width="166" height="10" uuid="9b4148f0-4518-4f5e-89a1-3bacbc918afe"/>
@@ -308,7 +328,7 @@ where id =  $P{transferencia_id}]]>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{c_domicilio}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{c_domicilio} + " - C.d.C. " + $F{c_box}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="116" y="155" width="100" height="10" uuid="304257c4-4f48-4696-bd31-aebc9147fe63"/>
@@ -379,19 +399,6 @@ where id =  $P{transferencia_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="115" y="447" width="100" height="10" uuid="60559195-05bc-4f61-9836-d6f163caccf7"/>
-				<textElement>
-					<font fontName="Times New Roman" size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{c_domicilio}]]></textFieldExpression>
-			</textField>
-			<rectangle radius="5">
-				<reportElement mode="Transparent" x="-1" y="280" width="557" height="240" uuid="971c6ab3-57f0-4701-bed9-6e167c8a2c17"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="418" y="463" width="133" height="15" uuid="7f7f07cf-d8b0-4bc0-bc6b-f65d3a22f569"/>
 				<graphicElement>
@@ -479,12 +486,6 @@ where id =  $P{transferencia_id}]]>
 			</staticText>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="281" y="377" width="271" height="81" uuid="ea5a6261-3c26-4226-8994-ef4e7319a95c"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<rectangle radius="5">
-				<reportElement mode="Transparent" x="5" y="377" width="267" height="38" uuid="f4070940-9d68-4e0c-ac1f-09295056a6d4"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
@@ -593,13 +594,6 @@ where id =  $P{transferencia_id}]]>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="115" y="404" width="100" height="10" uuid="00168fe4-61f0-4d9e-a213-0229693776b0"/>
-				<textElement>
-					<font fontName="Times New Roman" size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{d_domicilio}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="41" y="360" width="166" height="10" uuid="bac263f6-78cb-4037-a63d-2461d2c61ed8"/>
 				<textElement>
 					<font fontName="Serif" size="8"/>
@@ -661,19 +655,6 @@ where id =  $P{transferencia_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="116" y="717" width="100" height="10" uuid="8387aad0-5f99-4389-9a3f-c4507f808d33"/>
-				<textElement>
-					<font fontName="Times New Roman" size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{c_domicilio}]]></textFieldExpression>
-			</textField>
-			<rectangle radius="5">
-				<reportElement mode="Transparent" x="0" y="550" width="557" height="240" uuid="9fa35439-0227-45f6-9006-48db36a7f23a"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
 			<rectangle radius="5">
 				<reportElement mode="Transparent" x="419" y="733" width="133" height="15" uuid="7c3afa5f-c828-42a5-9539-dec7d9b71f88"/>
 				<graphicElement>
@@ -875,13 +856,6 @@ where id =  $P{transferencia_id}]]>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="116" y="674" width="100" height="10" uuid="c2c0cc26-9ce1-45c8-8083-122e55846835"/>
-				<textElement>
-					<font fontName="Times New Roman" size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{d_domicilio}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="42" y="630" width="166" height="10" uuid="ce45b791-11db-4382-bac4-6ad27214982a"/>
 				<textElement>
 					<font fontName="Serif" size="8"/>
@@ -909,6 +883,34 @@ where id =  $P{transferencia_id}]]>
 				</textElement>
 				<text><![CDATA[TRIPLICADO]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="116" y="404" width="100" height="10" uuid="55b36a81-6713-460a-878a-71ba6fa95682"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{d_domicilio} + " - C.d.C. " + $F{d_box}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="447" width="100" height="10" uuid="36375944-1724-451d-bf91-3e5c2f95a79a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{c_domicilio} + " - C.d.C. " + $F{c_box}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="116" y="674" width="100" height="10" uuid="d9ac3c05-5531-4fbf-a4ed-f9529616c14f"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{d_domicilio} + " - C.d.C. " + $F{d_box}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="717" width="100" height="10" uuid="3ff7cd12-d254-4339-8a18-0ff8041df444"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{c_domicilio} + " - C.d.C. " + $F{c_box}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>

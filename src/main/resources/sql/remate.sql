@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.3.5
 -- Dumped by pg_dump version 9.4rc1
--- Started on 2015-05-12 17:28:50
+-- Started on 2015-05-13 15:14:37
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -471,7 +471,7 @@ ALTER SEQUENCE tbl_transferencias_id_seq OWNED BY tbl_transferencias.id;
 
 
 --
--- TOC entry 191 (class 1259 OID 24927)
+-- TOC entry 191 (class 1259 OID 25012)
 -- Name: transferencia; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -484,11 +484,13 @@ CREATE VIEW transferencia AS
     i.nombre AS c_nombre,
     d.domicilio AS d_domicilio,
     i.domicilio AS c_domicilio,
+    d.box AS d_box,
+    i.box AS c_box,
     t.monto
    FROM tbl_transferencias t,
     tbl_miembros d,
     tbl_iglesia i
-  WHERE ((t.id_miembro = d.id) AND (i.id = 1));
+  WHERE (t.id_miembro = d.id);
 
 
 ALTER TABLE transferencia OWNER TO postgres;
@@ -706,7 +708,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2015-05-12 17:28:51
+-- Completed on 2015-05-13 15:14:39
 
 --
 -- PostgreSQL database dump complete

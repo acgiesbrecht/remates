@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
@@ -31,7 +33,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
-import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
@@ -47,6 +48,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
     List<Date> listFechasCuotas;
     TblRematesCuotas remateCuotas;
     Integer saldoActual;
+    Timer timer;
 
     /**
      * Creates new form FramePagos
@@ -87,6 +89,19 @@ public class FramePagos extends javax.swing.JInternalFrame {
             txtTransferencia.setVisible(false);
             txtRecibo.setVisible(false);
             cmdProcesar.setVisible(false);
+
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (cboFechaRemate.getSelectedIndex() > -1) {
+                        Integer remateId = ((TblRemates) cboFechaRemate.getSelectedItem()).getId();
+                        queryMiembros = entityManager.createNativeQuery("SELECT m.* FROM tbl_miembros m, tbl_remates_detalle r WHERE r.id_remate = " + remateId.toString() + " AND r.id_miembro = m.id AND m.ctacte <> 11111 GROUP BY m.id ORDER BY m.nombre", TblMiembros.class);
+                        listMiembros.clear();
+                        listMiembros.addAll(queryMiembros.getResultList());
+                    }
+                }
+            }, 5000);
 
             AutoCompleteDecorator.decorate(cboFechaRemate);
             AutoCompleteDecorator.decorate(cboMiembro);
