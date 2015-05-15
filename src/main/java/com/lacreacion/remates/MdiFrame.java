@@ -8,6 +8,7 @@ package com.lacreacion.remates;
 import java.awt.Color;
 import javax.swing.DesktopManager;
 import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,6 +29,7 @@ public class MdiFrame extends javax.swing.JFrame {
         desktop = new JDesktopPane();
         desktop.setBackground(Color.white);
         setContentPane(desktop);
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }
 
     /**

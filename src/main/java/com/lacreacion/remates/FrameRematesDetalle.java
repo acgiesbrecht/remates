@@ -5,6 +5,9 @@
  */
 package com.lacreacion.remates;
 
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import com.lacreacion.remates.domain.TblMiembros;
 import com.lacreacion.remates.domain.TblRemates;
 import java.awt.Color;
@@ -23,7 +26,6 @@ import javax.persistence.RollbackException;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -51,9 +53,16 @@ public class FrameRematesDetalle extends JInternalFrame {
                 entityManager.getTransaction().begin();
             }
 
-            AutoCompleteDecorator.decorate(cboFechaRemate);
-            AutoCompleteDecorator.decorate(cboCategoria);
-            AutoCompleteDecorator.decorate(cboMiembro);
+            //AutoCompleteDecorator.decorate(cboFechaRemate);
+            //AutoCompleteDecorator.decorate(cboCategoria);
+            AutoCompleteSupport support = AutoCompleteSupport.install(cboFechaRemate, GlazedLists.eventListOf(listRemates.toArray()));
+            support.setFilterMode(TextMatcherEditor.CONTAINS);
+            AutoCompleteSupport support1 = AutoCompleteSupport.install(cboCategoria, GlazedLists.eventListOf(tblRematesCategoriasList.toArray()));
+            support1.setFilterMode(TextMatcherEditor.CONTAINS);
+
+            AutoCompleteSupport support2 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
+            support2.setFilterMode(TextMatcherEditor.CONTAINS);
+//AutoCompleteDecorator.decorate(cboMiembro);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
             ex.printStackTrace();
@@ -550,6 +559,7 @@ public class FrameRematesDetalle extends JInternalFrame {
 
             lblTotal.setText(String.format("%,d", listRematesDetalle.stream().mapToInt(a -> a.getMonto()).sum()));
             lblTotalOperaciones.setText(String.format("%,d", listRematesDetalle.stream().mapToInt(a -> a.getMonto()).count()));
+            txtCtaCte.setText("");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }

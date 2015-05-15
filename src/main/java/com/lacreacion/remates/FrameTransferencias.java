@@ -5,6 +5,9 @@
  */
 package com.lacreacion.remates;
 
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import com.lacreacion.remates.domain.TblMiembros;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -27,7 +30,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -49,7 +51,9 @@ public class FrameTransferencias extends JInternalFrame {
         if (!Beans.isDesignTime()) {
             entityManager.getTransaction().begin();
         }
-        AutoCompleteDecorator.decorate(cboMiembro);
+        //AutoCompleteDecorator.decorate(cboMiembro);
+        AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
+        support1.setFilterMode(TextMatcherEditor.CONTAINS);
     }
 
     /**

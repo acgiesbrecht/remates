@@ -5,6 +5,9 @@
  */
 package com.lacreacion.remates;
 
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import com.lacreacion.remates.domain.CuotaModel;
 import com.lacreacion.remates.domain.TblMiembros;
 import com.lacreacion.remates.domain.TblPagos;
@@ -32,7 +35,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -102,8 +104,15 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 }
             }, 5000);
 
-            AutoCompleteDecorator.decorate(cboFechaRemate);
-            AutoCompleteDecorator.decorate(cboMiembro);
+            //AutoCompleteDecorator.decorate(cboFechaRemate);
+            //AutoCompleteDecorator.decorate(cboMiembro);
+            // AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros));
+            //final EventList<TblMiembros> urls = GlazedLists.eventList(Arrays.asList(URLS));
+            AutoCompleteSupport support = AutoCompleteSupport.install(cboFechaRemate, GlazedLists.eventListOf(listRemates.toArray()));
+            support.setFilterMode(TextMatcherEditor.CONTAINS);
+            AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
+            support1.setFilterMode(TextMatcherEditor.CONTAINS);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
@@ -501,7 +510,13 @@ public class FramePagos extends javax.swing.JInternalFrame {
         try {
             if (cboFechaRemate.getSelectedIndex() > -1) {
                 Integer remateId = ((TblRemates) cboFechaRemate.getSelectedItem()).getId();
-                queryMiembros = entityManager.createNativeQuery("SELECT m.* FROM tbl_miembros m, tbl_remates_detalle r WHERE r.id_remate = " + remateId.toString() + " AND r.id_miembro = m.id AND m.ctacte <> 11111 GROUP BY m.id ORDER BY m.nombre", TblMiembros.class);
+                //queryMiembros = entityManager.createNativeQuery("SELECT m.* FROM tbl_miembros m, tbl_remates_detalle r WHERE r.id_remate = " + remateId.toString() + " AND r.id_miembro = m.id AND m.ctacte <> 11111 GROUP BY m.id ORDER BY m.nombre", TblMiembros.class);
+                queryMiembros = entityManager.createNativeQuery("SELECT m.* "
+                        + "FROM tbl_miembros m left join tbl_pagos p on m.id = p.id_miembro"
+                        + " left join tbl_remates_detalle rd on m.id = rd.id_miembro"
+                        + " group by m.id, m.nombre, m.ctacte, m.domicilio, m.box "
+                        + " having sum(rd.monto) - coalesce(sum(p.monto), 0) > 0", TblMiembros.class);
+
                 listMiembros.clear();
 
                 listMiembros.addAll(queryMiembros.getResultList());
@@ -515,14 +530,14 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 }
 
                 remateCuotas = entityManager.find(TblRematesCuotas.class, remateId);
-                String fechas = "Las trnasferencias seran imprimidas con fechas de";
+                String fechas = "Las transferencias seran imprimidas con fechas de";
                 listFechasCuotas = Varios.getCuotasFechas(remateCuotas);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 for (Date fecha : listFechasCuotas) {
                     fechas += ", " + sdf.format(fecha);
                 }
                 fechas = fechas + ".";
-                fechas = fechas.replaceFirst(",", ".");
+                fechas = fechas.replaceFirst(",", " ");
                 lblCuotasFechas.setText(fechas);
 
             }
