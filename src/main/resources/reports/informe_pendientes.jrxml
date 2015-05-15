@@ -5,8 +5,6 @@
     <property name="com.jaspersoft.studio.data.defaultdataadapter" value="RematePG"/>
     <parameter name="transferencia_id" class="java.lang.Integer"/>
     <parameter name="logo" class="java.io.InputStream"/>
-    <parameter name="logo2" class="java.io.InputStream"/>
-    <parameter name="logo3" class="java.io.InputStream"/>
 
     <queryString language="SQL">
 		<![CDATA[SELECT *

@@ -7,12 +7,11 @@ package com.lacreacion.remates;
 
 import com.lacreacion.remates.domain.CuotaModel;
 import com.lacreacion.remates.domain.TblMiembros;
-import com.lacreacion.remates.domain.TblRecibos;
+import com.lacreacion.remates.domain.TblPagos;
 import com.lacreacion.remates.domain.TblRemates;
 import com.lacreacion.remates.domain.TblRematesCategorias;
 import com.lacreacion.remates.domain.TblRematesCuotas;
 import com.lacreacion.remates.domain.TblRematesDetalle;
-import com.lacreacion.remates.domain.TblTransferencias;
 import com.lacreacion.remates.utils.Varios;
 import java.awt.Color;
 import java.sql.Connection;
@@ -562,29 +561,40 @@ public class FramePagos extends javax.swing.JInternalFrame {
                     .mapToInt(s -> s.getMonto())
                     .sum();
             lblDeuda.setText(String.format("%(,d", deuda));
+            /*
+             Integer pagosT;
+             try {
+             System.out.println("SELECT sum(monto) AS total   FROM tbl_transferencias  WHERE id_miembro = " + selectedMiembro.getId().toString() + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString());
 
-            Integer pagosT;
-            try {
-                System.out.println("SELECT sum(monto) AS total   FROM tbl_transferencias  WHERE id_miembro = " + selectedMiembro.getId().toString() + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString());
+             pagosT = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
+             + "   FROM tbl_transferencias"
+             + "  WHERE id_miembro = " + selectedMiembro.getId().toString()
+             + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString()).getSingleResult().toString());
+             } catch (Exception ex) {
+             pagosT = 0;
+             }
+             Integer pagosR;
+             try {
+             pagosR = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
+             + " FROM tbl_recibos"
+             + " WHERE id_miembro = " + selectedMiembro.getId().toString()
+             + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString()).getSingleResult().toString());
+             } catch (Exception ex) {
+             pagosR = 0;
+             }
 
-                pagosT = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
-                        + "   FROM tbl_transferencias"
-                        + "  WHERE id_miembro = " + selectedMiembro.getId().toString()
-                        + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString()).getSingleResult().toString());
-            } catch (Exception ex) {
-                pagosT = 0;
-            }
-            Integer pagosR;
+             Integer pagos = pagosT + pagosR;
+             */
+
+            Integer pagos;
             try {
-                pagosR = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
-                        + " FROM tbl_recibos"
+                pagos = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
+                        + " FROM tbl_pagos"
                         + " WHERE id_miembro = " + selectedMiembro.getId().toString()
                         + " AND id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString()).getSingleResult().toString());
             } catch (Exception ex) {
-                pagosR = 0;
+                pagos = 0;
             }
-
-            Integer pagos = pagosT + pagosR;
 
             lblPagos.setText(String.format("%(,d", pagos));
 
@@ -640,11 +650,12 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 //List<CuotaModel> cuotasList = Varios.getCuotas(remateCuotas, Integer.valueOf(txtTransferencia1.getText()));
                 List<CuotaModel> cuotasList = Varios.getCuotas(remateCuotas, transferenciaMonto);
                 for (CuotaModel cuota : cuotasList) {
-                    TblTransferencias transferencia = new TblTransferencias();
+                    TblPagos transferencia = new TblPagos();
                     transferencia.setFechahora(cuota.getFecha());
                     transferencia.setIdMiembro(selectedMiembro);
-                    transferencia.setConcepto("Remate/Donacion");
+                    transferencia.setConcepto(((TblRemates) cboFechaRemate.getSelectedItem()).getDescripcion());
                     transferencia.setMonto(cuota.getMonto());
+                    transferencia.setTipo(0);
                     transferencia.setIdRemate((TblRemates) cboFechaRemate.getSelectedItem());
                     entityManager.getTransaction().begin();
                     entityManager.persist(transferencia);
@@ -653,7 +664,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
                     Map parameters = new HashMap();
                     parameters.put("transferencia_id", transferencia.getId());
-                    parameters.put("logo", getClass().getResource("/reports/cclogo200.png").getPath());
+                    parameters.put("logo", getClass().getResourceAsStream("/reports/cclogo200.png"));
 
                     JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
 
@@ -667,12 +678,13 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
             Integer reciboMonto = ((Number) txtRecibo.getValue()).intValue();
             if (reciboMonto > 0) {
-                TblRecibos recibo = new TblRecibos();
+                TblPagos recibo = new TblPagos();
                 recibo.setFechahora(fecha);
                 recibo.setIdMiembro(selectedMiembro);
                 recibo.setConcepto("Remate/Donacion");
                 recibo.setMonto(reciboMonto);
                 recibo.setIdRemate((TblRemates) cboFechaRemate.getSelectedItem());
+                recibo.setTipo(1);
                 entityManager.getTransaction().begin();
                 entityManager.persist(recibo);
                 entityManager.flush();

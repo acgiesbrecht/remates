@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author user
+ * @author AdrianGiesbrecht
  */
 @Entity
 @Table(name = "tbl_remates_cuotas")

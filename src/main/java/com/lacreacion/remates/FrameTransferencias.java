@@ -13,7 +13,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,7 +63,7 @@ public class FrameTransferencias extends JInternalFrame {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
-        query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblTransferencias t");
+        query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblPagos t WHERE t.tipo = 0");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
@@ -453,13 +452,16 @@ public class FrameTransferencias extends JInternalFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void newButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButton1ActionPerformed
-        if (masterTable.getSelectedRow() > 0) {
+        if (masterTable.getSelectedRow() > -1) {
             try {
                 Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
                 Map parameters = new HashMap();
                 parameters.put("transferencia_id", Integer.valueOf(idField.getText()));
-                parameters.put("logo", getClass().getResource("/reports/cclogo200.png").getPath());
-
+                //parameters.put("logo", getClass().getResource("/reports/cclogo200.png").getPath());
+                parameters.put("logo", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                parameters.put("logo2", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                parameters.put("logo3", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                //JOptionPane.showMessageDialog(null, getClass().getResource("/reports/cclogo200.png").getPath());
                 JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);

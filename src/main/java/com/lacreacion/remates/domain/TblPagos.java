@@ -27,48 +27,51 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author AdrianGiesbrecht
  */
 @Entity
-@Table(name = "tbl_transferencias")
+@Table(name = "tbl_pagos")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TblTransferencias.findAll", query = "SELECT t FROM TblTransferencias t"),
-    @NamedQuery(name = "TblTransferencias.findByFechahora", query = "SELECT t FROM TblTransferencias t WHERE t.fechahora = :fechahora"),
-    @NamedQuery(name = "TblTransferencias.findByConcepto", query = "SELECT t FROM TblTransferencias t WHERE t.concepto = :concepto"),
-    @NamedQuery(name = "TblTransferencias.findByMonto", query = "SELECT t FROM TblTransferencias t WHERE t.monto = :monto"),
-    @NamedQuery(name = "TblTransferencias.findById", query = "SELECT t FROM TblTransferencias t WHERE t.id = :id")})
-public class TblTransferencias implements Serializable {
+    @NamedQuery(name = "TblPagos.findAll", query = "SELECT t FROM TblPagos t"),
+    @NamedQuery(name = "TblPagos.findById", query = "SELECT t FROM TblPagos t WHERE t.id = :id"),
+    @NamedQuery(name = "TblPagos.findByFechahora", query = "SELECT t FROM TblPagos t WHERE t.fechahora = :fechahora"),
+    @NamedQuery(name = "TblPagos.findByConcepto", query = "SELECT t FROM TblPagos t WHERE t.concepto = :concepto"),
+    @NamedQuery(name = "TblPagos.findByMonto", query = "SELECT t FROM TblPagos t WHERE t.monto = :monto"),
+    @NamedQuery(name = "TblPagos.findByTipo", query = "SELECT t FROM TblPagos t WHERE t.tipo = :tipo")})
+public class TblPagos implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Basic(optional = false)
-    @Column(name = "fechahora")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechahora;
-    @Column(name = "concepto")
-    private String concepto;
-    @Basic(optional = false)
-    @Column(name = "monto")
-    private int monto;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "fechahora")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechahora;
+    @Column(name = "concepto")
+    private String concepto;
+    @Column(name = "monto")
+    private Integer monto;
+    @Column(name = "tipo")
+    private Integer tipo;
     @JoinColumn(name = "id_miembro", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private TblMiembros idMiembro;
     @JoinColumn(name = "id_remate", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private TblRemates idRemate;
 
-    public TblTransferencias() {
+    public TblPagos() {
     }
 
-    public TblTransferencias(Integer id) {
+    public TblPagos(Integer id) {
         this.id = id;
     }
 
-    public TblTransferencias(Integer id, Date fechahora, int monto) {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
-        this.fechahora = fechahora;
-        this.monto = monto;
     }
 
     public Date getFechahora() {
@@ -87,20 +90,20 @@ public class TblTransferencias implements Serializable {
         this.concepto = concepto;
     }
 
-    public int getMonto() {
+    public Integer getMonto() {
         return monto;
     }
 
-    public void setMonto(int monto) {
+    public void setMonto(Integer monto) {
         this.monto = monto;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getTipo() {
+        return tipo;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setTipo(Integer tipo) {
+        this.tipo = tipo;
     }
 
     public TblMiembros getIdMiembro() {
@@ -129,10 +132,10 @@ public class TblTransferencias implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TblTransferencias)) {
+        if (!(object instanceof TblPagos)) {
             return false;
         }
-        TblTransferencias other = (TblTransferencias) object;
+        TblPagos other = (TblPagos) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -141,7 +144,7 @@ public class TblTransferencias implements Serializable {
 
     @Override
     public String toString() {
-        return "com.lacreacion.remates.domain.TblTransferencias[ id=" + id + " ]";
+        return "com.lacreacion.remates.domain.TblPagos[ id=" + id + " ]";
     }
 
 }

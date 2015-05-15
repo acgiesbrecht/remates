@@ -6,7 +6,6 @@
 package com.lacreacion.remates.domain;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -28,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author user
+ * @author AdrianGiesbrecht
  */
 @Entity
 @Table(name = "tbl_remates")
@@ -51,6 +50,8 @@ public class TblRemates implements Serializable {
     private Date fecha;
     @Column(name = "descripcion")
     private String descripcion;
+    @OneToMany(mappedBy = "idRemate")
+    private Collection<TblPagos> tblPagosCollection;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "tblRemates")
     private TblRematesCuotas tblRematesCuotas;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRemate")
@@ -89,6 +90,15 @@ public class TblRemates implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @XmlTransient
+    public Collection<TblPagos> getTblPagosCollection() {
+        return tblPagosCollection;
+    }
+
+    public void setTblPagosCollection(Collection<TblPagos> tblPagosCollection) {
+        this.tblPagosCollection = tblPagosCollection;
     }
 
     public TblRematesCuotas getTblRematesCuotas() {
@@ -148,8 +158,7 @@ public class TblRemates implements Serializable {
 
     @Override
     public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return sdf.format(fecha) + " - " + descripcion;
+        return descripcion;
     }
 
 }

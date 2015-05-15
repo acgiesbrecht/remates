@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author user
+ * @author AdrianGiesbrecht
  */
 @Entity
 @Table(name = "tbl_miembros")
@@ -53,6 +53,8 @@ public class TblMiembros implements Serializable {
     private String domicilio;
     @Column(name = "box")
     private Integer box;
+    @OneToMany(mappedBy = "idMiembro")
+    private Collection<TblPagos> tblPagosCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
     private Collection<TblTransferencias> tblTransferenciasCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
@@ -111,6 +113,15 @@ public class TblMiembros implements Serializable {
 
     public void setBox(Integer box) {
         this.box = box;
+    }
+
+    @XmlTransient
+    public Collection<TblPagos> getTblPagosCollection() {
+        return tblPagosCollection;
+    }
+
+    public void setTblPagosCollection(Collection<TblPagos> tblPagosCollection) {
+        this.tblPagosCollection = tblPagosCollection;
     }
 
     @XmlTransient

@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author user
+ * @author AdrianGiesbrecht
  */
 @Entity
 @Table(name = "tbl_remates_categorias")
