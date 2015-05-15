@@ -506,7 +506,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCtaCteKeyTyped
 
-    private void cboFechaRemateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFechaRemateActionPerformed
+    void loadPendientes() {
         try {
             if (cboFechaRemate.getSelectedIndex() > -1) {
                 Integer remateId = ((TblRemates) cboFechaRemate.getSelectedItem()).getId();
@@ -545,16 +545,23 @@ public class FramePagos extends javax.swing.JInternalFrame {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
+    }
+    private void cboFechaRemateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFechaRemateActionPerformed
+        loadPendientes();
     }//GEN-LAST:event_cboFechaRemateActionPerformed
 
     void loadMiembro() {
         try {
             selectedMiembro = (TblMiembros) cboMiembro.getSelectedItem();
-            queryRematesDetalle = entityManager.createNativeQuery("SELECT * FROM tbl_remates_detalle WHERE id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString() + " AND id_miembro = "
-                    + selectedMiembro.getId().toString() + " ORDER BY fechahora", TblRematesDetalle.class);
+            queryRematesDetalle
+                    = entityManager.createNativeQuery("SELECT * FROM tbl_remates_detalle WHERE id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString() + " AND id_miembro = "
+                            + selectedMiembro.getId().toString() + " ORDER BY fechahora", TblRematesDetalle.class
+                    );
             listRematesDetalle.clear();
+
             listRematesDetalle.addAll(queryRematesDetalle.getResultList());
-            if (listRematesDetalle.size() > 0) {
+            if (listRematesDetalle.size()
+                    > 0) {
                 masterTable.setVisible(true);
                 lblDeuda.setVisible(true);
                 lblPagos.setVisible(true);
@@ -575,6 +582,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
             Integer deuda = listRematesDetalle.stream()
                     .mapToInt(s -> s.getMonto())
                     .sum();
+
             lblDeuda.setText(String.format("%(,d", deuda));
             /*
              Integer pagosT;
@@ -602,6 +610,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
              */
 
             Integer pagos;
+
             try {
                 pagos = Integer.parseInt(entityManager.createNativeQuery("SELECT sum(monto) AS total"
                         + " FROM tbl_pagos"
@@ -614,12 +623,16 @@ public class FramePagos extends javax.swing.JInternalFrame {
             lblPagos.setText(String.format("%(,d", pagos));
 
             saldoActual = deuda - pagos;
+
             lblSaldo.setText(String.format("%(,d", saldoActual));
 
-            txtTransferencia.setValue(deuda - pagos);
-            txtRecibo.setValue(0);
+            txtTransferencia.setValue(deuda
+                    - pagos);
+            txtRecibo.setValue(
+                    0);
 
-            txtTransferencia.setSelectionStart(0);
+            txtTransferencia.setSelectionStart(
+                    0);
             txtTransferencia.setSelectionEnd(txtTransferencia.getText().length());
 
             txtTransferencia.requestFocus();
@@ -716,7 +729,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 JasperPrintManager.printReport(jasperPrint, false);
             }
 
-            loadMiembro();
+            loadPendientes();
+            txtCtaCte.setText("");
             txtCtaCte.requestFocus();
 
         } catch (Exception ex) {
