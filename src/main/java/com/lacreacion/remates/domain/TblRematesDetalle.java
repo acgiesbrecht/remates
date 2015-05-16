@@ -45,15 +45,16 @@ public class TblRematesDetalle implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "monto")
-    private Integer monto;
+    private int monto;
     @Column(name = "observacion")
     private String observacion;
     @JoinColumn(name = "id_miembro", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TblMiembros idMiembro;
     @JoinColumn(name = "id_remate", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private TblRemates idRemate;
     @JoinColumn(name = "id_categoria", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -64,6 +65,11 @@ public class TblRematesDetalle implements Serializable {
 
     public TblRematesDetalle(Integer id) {
         this.id = id;
+    }
+
+    public TblRematesDetalle(Integer id, int monto) {
+        this.id = id;
+        this.monto = monto;
     }
 
     public Date getFechahora() {
@@ -82,11 +88,11 @@ public class TblRematesDetalle implements Serializable {
         this.id = id;
     }
 
-    public Integer getMonto() {
+    public int getMonto() {
         return monto;
     }
 
-    public void setMonto(Integer monto) {
+    public void setMonto(int monto) {
         this.monto = monto;
     }
 

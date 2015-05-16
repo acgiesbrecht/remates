@@ -6,12 +6,9 @@
 package com.lacreacion.remates;
 
 import com.lacreacion.remates.domain.TblMiembros;
-import com.lacreacion.remates.domain.TblRematesCuotas;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
@@ -27,10 +24,6 @@ public class FrameInformes extends javax.swing.JInternalFrame {
     List<TblMiembros> listMiembrosFiltered;
     TblMiembros selectedMiembro;
     String databaseIP;
-    List<Date> listFechasCuotas;
-    TblRematesCuotas remateCuotas;
-    Integer saldoActual;
-    Timer timer;
 
     /**
      * Creates new form FramePagos

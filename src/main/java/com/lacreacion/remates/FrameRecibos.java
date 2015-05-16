@@ -96,6 +96,7 @@ public class FrameRecibos extends JInternalFrame {
 
         dateTableCellRenderer1.setText("dateTableCellRenderer1");
 
+        numberCellRenderer1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         numberCellRenderer1.setText("numberCellRenderer1");
 
         addInternalFrameListener(formListener);
@@ -342,9 +343,9 @@ public class FrameRecibos extends JInternalFrame {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         try {
             int[] selected = masterTable.getSelectedRows();
-            List<com.lacreacion.remates.domain.TblRecibos> toRemove = new ArrayList<>(selected.length);
+            List<com.lacreacion.remates.domain.TblPagos> toRemove = new ArrayList<>(selected.length);
             for (int idx = 0; idx < selected.length; idx++) {
-                com.lacreacion.remates.domain.TblRecibos t = list.get(masterTable.convertRowIndexToModel(selected[idx]));
+                com.lacreacion.remates.domain.TblPagos t = list.get(masterTable.convertRowIndexToModel(selected[idx]));
                 toRemove.add(t);
                 entityManager.remove(t);
             }
@@ -356,7 +357,8 @@ public class FrameRecibos extends JInternalFrame {
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
         try {
-            com.lacreacion.remates.domain.TblRecibos t = new com.lacreacion.remates.domain.TblRecibos();
+            com.lacreacion.remates.domain.TblPagos t = new com.lacreacion.remates.domain.TblPagos();
+            t.setTipo(1);
             entityManager.persist(t);
             list.add(t);
             int row = list.size() - 1;
@@ -382,8 +384,8 @@ public class FrameRecibos extends JInternalFrame {
             JOptionPane.showMessageDialog(null, rex.getMessage());
 
             entityManager.getTransaction().begin();
-            List<com.lacreacion.remates.domain.TblRecibos> merged = new ArrayList<>(list.size());
-            for (com.lacreacion.remates.domain.TblRecibos t : list) {
+            List<com.lacreacion.remates.domain.TblPagos> merged = new ArrayList<>(list.size());
+            for (com.lacreacion.remates.domain.TblPagos t : list) {
                 merged.add(entityManager.merge(t));
             }
             list.clear();
@@ -442,7 +444,7 @@ public class FrameRecibos extends JInternalFrame {
     private javax.swing.JTextField idField;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idMiembroLabel;
-    private java.util.List<com.lacreacion.remates.domain.TblRecibos> list;
+    private java.util.List<com.lacreacion.remates.domain.TblPagos> list;
     private java.util.List listMiembros;
     private javax.swing.JScrollPane masterScrollPane;
     private javax.swing.JTable masterTable;

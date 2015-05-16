@@ -6,10 +6,22 @@
 package com.lacreacion.remates;
 
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.prefs.Preferences;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.swing.DesktopManager;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -20,11 +32,27 @@ public class MdiFrame extends javax.swing.JFrame {
     JDesktopPane desktop;
     DesktopManager manager;
     private String databaseIP;
+    Map<String, String> persistenceMap = new HashMap<>();
 
     /**
      * Creates new form MDIFrame
      */
+    private void getDatabaseIP() {
+        try {
+            databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
+
+            persistenceMap.put("javax.persistence.jdbc.url", "jdbc:postgresql://" + databaseIP + ":5432/remate");
+            persistenceMap.put("javax.persistence.jdbc.user", "postgres");
+            persistenceMap.put("javax.persistence.jdbc.password", "123456");
+            persistenceMap.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }
+    }
+
     public MdiFrame() {
+        getDatabaseIP();
         initComponents();
         desktop = new JDesktopPane();
         desktop.setBackground(Color.white);
@@ -153,7 +181,7 @@ public class MdiFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem5);
 
-        jMenuItem6.setText("Listados");
+        jMenuItem6.setText("Listado Pendientes");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
@@ -323,7 +351,20 @@ public class MdiFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuMiembros5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        // TODO add your handling code here:
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/pendientes.jrxml"));
+            Map parameters = new HashMap();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
@@ -387,14 +428,4 @@ public class MdiFrame extends javax.swing.JFrame {
     /**
      * @return the databaseIP
      */
-    public String getDatabaseIP() {
-        return databaseIP;
-    }
-
-    /**
-     * @param databaseIP the databaseIP to set
-     */
-    public void setDatabaseIP(String databaseIP) {
-        this.databaseIP = databaseIP;
-    }
 }

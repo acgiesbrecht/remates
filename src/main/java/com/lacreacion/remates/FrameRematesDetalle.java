@@ -84,7 +84,7 @@ public class FrameRematesDetalle extends JInternalFrame {
         listRematesDetalle = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryRematesDetalle.getResultList());
         tblRematesCategoriasQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesCategorias t ORDER BY t.descripcion");
         tblRematesCategoriasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(tblRematesCategoriasQuery.getResultList());
-        queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
+        queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.ctacte");
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
         normalTableCellRenderer1 = new com.lacreacion.remates.utils.NormalTableCellRenderer();
         categoriasConverter1 = new com.lacreacion.remates.utils.CategoriasConverter();

@@ -56,11 +56,7 @@ public class TblMiembros implements Serializable {
     @OneToMany(mappedBy = "idMiembro")
     private Collection<TblPagos> tblPagosCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
-    private Collection<TblTransferencias> tblTransferenciasCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
     private Collection<TblRematesDetalle> tblRematesDetalleCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMiembro")
-    private Collection<TblRecibos> tblRecibosCollection;
 
     public TblMiembros() {
     }
@@ -125,30 +121,12 @@ public class TblMiembros implements Serializable {
     }
 
     @XmlTransient
-    public Collection<TblTransferencias> getTblTransferenciasCollection() {
-        return tblTransferenciasCollection;
-    }
-
-    public void setTblTransferenciasCollection(Collection<TblTransferencias> tblTransferenciasCollection) {
-        this.tblTransferenciasCollection = tblTransferenciasCollection;
-    }
-
-    @XmlTransient
     public Collection<TblRematesDetalle> getTblRematesDetalleCollection() {
         return tblRematesDetalleCollection;
     }
 
     public void setTblRematesDetalleCollection(Collection<TblRematesDetalle> tblRematesDetalleCollection) {
         this.tblRematesDetalleCollection = tblRematesDetalleCollection;
-    }
-
-    @XmlTransient
-    public Collection<TblRecibos> getTblRecibosCollection() {
-        return tblRecibosCollection;
-    }
-
-    public void setTblRecibosCollection(Collection<TblRecibos> tblRecibosCollection) {
-        this.tblRecibosCollection = tblRecibosCollection;
     }
 
     @Override

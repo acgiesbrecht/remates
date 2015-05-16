@@ -99,6 +99,7 @@ public class FrameTransferencias extends JInternalFrame {
 
         dateTableCellRenderer1.setText("dateTableCellRenderer1");
 
+        numberCellRenderer1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         numberCellRenderer1.setText("numberCellRenderer1");
 
         addInternalFrameListener(formListener);
@@ -143,7 +144,7 @@ public class FrameTransferencias extends JInternalFrame {
         binding.setSourceUnreadableValue("null");
         binding.setConverter(dateToStringConverter1);
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), fechahoraField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), fechahoraField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.concepto}"), conceptoField, org.jdesktop.beansbinding.BeanProperty.create("text"));
@@ -187,6 +188,10 @@ public class FrameTransferencias extends JInternalFrame {
         idMiembroLabel1.setText("Cta. Cte.:");
 
         txtCtaCte.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), txtCtaCte, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
         txtCtaCte.addFocusListener(formListener);
         txtCtaCte.addActionListener(formListener);
         txtCtaCte.addKeyListener(formListener);
@@ -199,6 +204,8 @@ public class FrameTransferencias extends JInternalFrame {
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listMiembros, cboMiembro);
         bindingGroup.addBinding(jComboBoxBinding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.idMiembro}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -408,9 +415,9 @@ public class FrameTransferencias extends JInternalFrame {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         try {
             int[] selected = masterTable.getSelectedRows();
-            List<com.lacreacion.remates.domain.TblTransferencias> toRemove = new ArrayList<com.lacreacion.remates.domain.TblTransferencias>(selected.length);
+            List<com.lacreacion.remates.domain.TblPagos> toRemove = new ArrayList<>(selected.length);
             for (int idx = 0; idx < selected.length; idx++) {
-                com.lacreacion.remates.domain.TblTransferencias t = list.get(masterTable.convertRowIndexToModel(selected[idx]));
+                com.lacreacion.remates.domain.TblPagos t = list.get(masterTable.convertRowIndexToModel(selected[idx]));
                 toRemove.add(t);
                 entityManager.remove(t);
             }
@@ -422,7 +429,8 @@ public class FrameTransferencias extends JInternalFrame {
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
         try {
-            com.lacreacion.remates.domain.TblTransferencias t = new com.lacreacion.remates.domain.TblTransferencias();
+            com.lacreacion.remates.domain.TblPagos t = new com.lacreacion.remates.domain.TblPagos();
+            t.setTipo(0);
             entityManager.persist(t);
             list.add(t);
             int row = list.size() - 1;
@@ -446,8 +454,8 @@ public class FrameTransferencias extends JInternalFrame {
         } catch (RollbackException rex) {
             JOptionPane.showMessageDialog(null, rex.getMessage());
             entityManager.getTransaction().begin();
-            List<com.lacreacion.remates.domain.TblTransferencias> merged = new ArrayList<com.lacreacion.remates.domain.TblTransferencias>(list.size());
-            for (com.lacreacion.remates.domain.TblTransferencias t : list) {
+            List<com.lacreacion.remates.domain.TblPagos> merged = new ArrayList<>(list.size());
+            for (com.lacreacion.remates.domain.TblPagos t : list) {
                 merged.add(entityManager.merge(t));
             }
             list.clear();
@@ -558,7 +566,7 @@ public class FrameTransferencias extends JInternalFrame {
     private javax.swing.JLabel idMiembroLabel;
     private javax.swing.JLabel idMiembroLabel1;
     private javax.swing.JLabel idMiembroLabel2;
-    private java.util.List<com.lacreacion.remates.domain.TblTransferencias> list;
+    private java.util.List<com.lacreacion.remates.domain.TblPagos> list;
     private java.util.List listMiembros;
     private javax.swing.JScrollPane masterScrollPane;
     private javax.swing.JTable masterTable;

@@ -55,11 +55,7 @@ public class TblRemates implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "tblRemates")
     private TblRematesCuotas tblRematesCuotas;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRemate")
-    private Collection<TblTransferencias> tblTransferenciasCollection;
-    @OneToMany(mappedBy = "idRemate")
     private Collection<TblRematesDetalle> tblRematesDetalleCollection;
-    @OneToMany(mappedBy = "idRemate")
-    private Collection<TblRecibos> tblRecibosCollection;
 
     public TblRemates() {
     }
@@ -110,30 +106,12 @@ public class TblRemates implements Serializable {
     }
 
     @XmlTransient
-    public Collection<TblTransferencias> getTblTransferenciasCollection() {
-        return tblTransferenciasCollection;
-    }
-
-    public void setTblTransferenciasCollection(Collection<TblTransferencias> tblTransferenciasCollection) {
-        this.tblTransferenciasCollection = tblTransferenciasCollection;
-    }
-
-    @XmlTransient
     public Collection<TblRematesDetalle> getTblRematesDetalleCollection() {
         return tblRematesDetalleCollection;
     }
 
     public void setTblRematesDetalleCollection(Collection<TblRematesDetalle> tblRematesDetalleCollection) {
         this.tblRematesDetalleCollection = tblRematesDetalleCollection;
-    }
-
-    @XmlTransient
-    public Collection<TblRecibos> getTblRecibosCollection() {
-        return tblRecibosCollection;
-    }
-
-    public void setTblRecibosCollection(Collection<TblRecibos> tblRecibosCollection) {
-        this.tblRecibosCollection = tblRecibosCollection;
     }
 
     @Override
