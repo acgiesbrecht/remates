@@ -14,7 +14,6 @@ import com.lacreacion.remates.domain.TblPagos;
 import com.lacreacion.remates.domain.TblRemates;
 import com.lacreacion.remates.domain.TblRematesCategorias;
 import com.lacreacion.remates.domain.TblRematesCuotas;
-import com.lacreacion.remates.domain.TblRematesDetalle;
 import com.lacreacion.remates.utils.Varios;
 import java.awt.Color;
 import java.sql.Connection;
@@ -32,8 +31,8 @@ import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -78,8 +77,6 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
             getDatabaseIP();
             initComponents();
-            cboFechaRemate.setSelectedIndex(-1);
-            cboMiembro.setSelectedIndex(-1);
             txtCtaCte.setEnabled(false);
             cboMiembro.setEnabled(false);
             masterTable.setVisible(false);
@@ -107,6 +104,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
             support.setFilterMode(TextMatcherEditor.CONTAINS);
             AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
             support1.setFilterMode(TextMatcherEditor.CONTAINS);
+            cboFechaRemate.setSelectedIndex(-1);
+            cboMiembro.setSelectedIndex(-1);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -126,10 +125,12 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
         entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
         dateToStringConverter1 = new com.lacreacion.remates.utils.DateToStringConverter();
-        queryRemates = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRemates t");
+        queryRemates = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRemates t ORDER BY t.fecha");
         listRemates = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryRemates.getResultList());
         queryMiembros = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblMiembros t ORDER BY t.nombre");
-        queryRematesDetalle = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRemates t ORDER BY t.fecha");
+        queryRematesDetalle = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesDetalle t WHERE t.idRemate = :remate AND t.idMiembro = :miembro ORDER BY t.fechahora");
+        queryRematesDetalle.setParameter("remate", null);
+        queryRematesDetalle.setParameter("miembro", null);
         listMiembros = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryMiembros.getResultList());
         listRematesDetalle = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryRematesDetalle.getResultList());
         dateTimeTableCellRenderer1 = new com.lacreacion.remates.utils.DateTimeTableCellRenderer();
@@ -397,23 +398,6 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(masterScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(idMiembroLabel))
-                        .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(idMiembroLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtCtaCte, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(idMiembroLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
-                            .addComponent(cboFechaRemate, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -427,8 +411,26 @@ public class FramePagos extends javax.swing.JInternalFrame {
                             .addComponent(lblDeuda, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(idMiembroLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(idMiembroLabel))
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cboFechaRemate, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(idMiembroLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtCtaCte, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(idMiembroLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jButton1))))
+                            .addComponent(idMiembroLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 12, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -447,7 +449,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
                     .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addGap(12, 12, 12)
-                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addComponent(masterScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -569,15 +571,17 @@ public class FramePagos extends javax.swing.JInternalFrame {
     void loadMiembro() {
         try {
             selectedMiembro = (TblMiembros) cboMiembro.getSelectedItem();
-            queryRematesDetalle
-                    = entityManager.createNativeQuery("SELECT * FROM tbl_remates_detalle WHERE id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString() + " AND id_miembro = "
-                            + selectedMiembro.getId().toString() + " ORDER BY fechahora", TblRematesDetalle.class
-                    );
+            /*queryRematesDetalle
+             = entityManager.createNativeQuery("SELECT * FROM tbl_remates_detalle WHERE id_remate = " + ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString() + " AND id_miembro = "
+             + selectedMiembro.getId().toString() + " ORDER BY fechahora", TblRematesDetalle.class
+             );*/
+
+            queryRematesDetalle.setParameter("remate", (TblRemates) cboFechaRemate.getSelectedItem());
+            queryRematesDetalle.setParameter("miembro", selectedMiembro);
             listRematesDetalle.clear();
 
             listRematesDetalle.addAll(queryRematesDetalle.getResultList());
-            if (listRematesDetalle.size()
-                    > 0) {
+            if (listRematesDetalle.size() > 0) {
                 masterTable.setVisible(true);
                 lblDeuda.setVisible(true);
                 lblPagos.setVisible(true);
@@ -642,15 +646,10 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
             lblSaldo.setText(String.format("%(,d", saldoActual));
 
-            txtTransferencia.setValue(deuda
-                    - pagos);
-            txtRecibo.setValue(
-                    0);
+            txtTransferencia.setValue(deuda - pagos);
+            txtRecibo.setValue(0);
 
-            txtTransferencia.setSelectionStart(
-                    0);
-            txtTransferencia.setSelectionEnd(txtTransferencia.getText().length());
-
+            txtTransferencia.selectAll();
             txtTransferencia.requestFocus();
 
         } catch (Exception ex) {
@@ -659,7 +658,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
         }
     }
     private void cboMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMiembroActionPerformed
-        if (cboMiembro.getSelectedIndex() > -1) {
+        if (cboMiembro.getSelectedItem() != null) {
             loadMiembro();
         }
 
@@ -675,19 +674,21 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
     private void cmdProcesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdProcesarActionPerformed
         try {
+            cmdProcesar.setEnabled(false);
             Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
             Date fecha = new Date();
-
+            Integer t_id = 0;
+            Integer r_id = 0;
             /*if (!StringUtils.isNumeric(txtTransferencia.getText())) {
              txtTransferencia1.setText("0");
              }
              if (!StringUtils.isNumeric(txtEfectivo.getText())) {
              txtEfectivo.setText("0");
-             }
-             if (Integer.valueOf(txtEfectivo.getText()) + Integer.valueOf(txtTransferencia1.getText()) > saldoActual) {
-             JOptionPane.showMessageDialog(null, "El Monto a abonar no puede superar la deuda existente.");
-             return;
              }*/
+            if ((Integer) txtRecibo.getValue() + (Integer) txtTransferencia.getValue() > saldoActual) {
+                JOptionPane.showMessageDialog(null, "El Monto a abonar no puede superar la deuda existente.");
+                return;
+            }
             //if (Integer.valueOf(txtTransferencia.getValue()) > 0) {
             Integer transferenciaMonto = ((Number) txtTransferencia.getValue()).intValue();
             if (transferenciaMonto > 0) {
@@ -705,19 +706,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
                     entityManager.persist(transferencia);
                     entityManager.flush();
                     entityManager.getTransaction().commit();
+                    t_id = transferencia.getId();
 
-                    Map parameters = new HashMap();
-                    parameters.put("transferencia_id", transferencia.getId());
-                    parameters.put("logo", getClass().getResourceAsStream("/reports/cclogo200.png"));
-                    parameters.put("logo2", getClass().getResourceAsStream("/reports/cclogo200.png"));
-                    parameters.put("logo3", getClass().getResourceAsStream("/reports/cclogo200.png"));
-
-                    JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
-
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-                    //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
-                    //jReportsViewer.setVisible(true);
-                    JasperPrintManager.printReport(jasperPrint, false);
                 }
 
             }
@@ -736,24 +726,12 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 entityManager.flush();
                 entityManager.getTransaction().commit();
 
-                Map parameters = new HashMap();
-                parameters.put("recibo_id", recibo.getId());
-
-                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/recibo.jrxml"));
-
-                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-                //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
-                //jReportsViewer.setVisible(true);
-                JasperPrintManager.printReport(jasperPrint, false);
+                r_id = recibo.getId();
             }
 
-            //loadPendientes();
-            Integer sel = cboFechaRemate.getSelectedIndex();
-            cboFechaRemate.setSelectedIndex(-1);
-            cboFechaRemate.setSelectedIndex(sel);
-
-            listRematesDetalle = null;
-            cboMiembro.setSelectedIndex(-1);
+            loadPendientes();
+            cboMiembro.setSelectedItem(null);
+            listRematesDetalle.clear();
             lblDeuda.setText("");
             lblSaldo.setText("");
             lblPagos.setText("");
@@ -761,9 +739,35 @@ public class FramePagos extends javax.swing.JInternalFrame {
             txtCtaCte.setBackground(Color.white);
             txtCtaCte.requestFocus();
 
+            if (t_id > 0) {
+                Map parameters = new HashMap();
+                parameters.put("transferencia_id", t_id);
+                parameters.put("logo", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                parameters.put("logo2", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                parameters.put("logo3", getClass().getResourceAsStream("/reports/cclogo200.png"));
+
+                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+                JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                jReportsViewer.setVisible(true);
+                //JasperPrintManager.printReport(jasperPrint, false);
+            }
+            if (r_id > 0) {
+                Map parameters = new HashMap();
+                parameters.put("recibo_id", r_id);
+                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/recibo.jrxml"));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+                JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                jReportsViewer.setVisible(true);
+                //JasperPrintManager.printReport(jasperPrint, false);
+            }
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
             ex.printStackTrace();
+        } finally {
+            cmdProcesar.setEnabled(true);
         }
     }//GEN-LAST:event_cmdProcesarActionPerformed
 
@@ -772,7 +776,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void txtTransferenciaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTransferenciaFocusGained
-
+        txtTransferencia.selectAll();
     }//GEN-LAST:event_txtTransferenciaFocusGained
 
     private void txtTransferenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTransferenciaMouseClicked
@@ -784,7 +788,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtTransferenciaActionPerformed
 
     private void txtReciboFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtReciboFocusGained
-        // TODO add your handling code here:
+        txtRecibo.selectAll();        // TODO add your handling code here:
     }//GEN-LAST:event_txtReciboFocusGained
 
     private void txtReciboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtReciboMouseClicked

@@ -14,12 +14,14 @@
     </Component>
     <Component class="javax.persistence.Query" name="queryRematesDetalle">
       <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT t FROM TblRematesDetalle t ORDER BY t.fechahora"/>
+        <Property name="query" type="java.lang.String" value="SELECT t FROM TblRematesDetalle t WHERE t.idRemate = :remateId ORDER BY t.fechahora"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
           <ComponentRef name="entityManager"/>
         </Property>
       </Properties>
       <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="queryRematesDetalle.setParameter(&quot;remateId&quot;, null) ;"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value=" "/>
         <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="false"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="2"/>
       </AuxValues>
@@ -193,7 +195,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="cboFechaRemate" max="32767" attributes="0"/>
+                      <Component id="cboFechaRemate" min="-2" pref="347" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -253,7 +256,7 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <EmptySpace pref="32" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
@@ -511,10 +514,7 @@
       </BindingProperties>
       <Events>
         <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCtaCteFocusGained"/>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCtaCteActionPerformed"/>
-        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCtaCteKeyPressed"/>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCtaCteKeyReleased"/>
-        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCtaCteKeyTyped"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="idMiembroLabel2">

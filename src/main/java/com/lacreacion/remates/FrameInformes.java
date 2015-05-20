@@ -5,6 +5,9 @@
  */
 package com.lacreacion.remates;
 
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import com.lacreacion.remates.domain.TblMiembros;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +15,6 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -53,9 +55,10 @@ public class FrameInformes extends javax.swing.JInternalFrame {
 
             getDatabaseIP();
             initComponents();
-            cboFechaRemate.setSelectedIndex(-1);
 
-            AutoCompleteDecorator.decorate(cboFechaRemate);
+            AutoCompleteSupport support = AutoCompleteSupport.install(cboFechaRemate, GlazedLists.eventListOf(listRemates.toArray()));
+            support.setFilterMode(TextMatcherEditor.CONTAINS);
+            cboFechaRemate.setSelectedIndex(-1);
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
@@ -84,6 +87,10 @@ public class FrameInformes extends javax.swing.JInternalFrame {
         numberCellRenderer1 = new com.lacreacion.remates.utils.NumberCellRenderer();
         cboFechaRemate = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         dateTimeTableCellRenderer1.setText("dateTimeTableCellRenderer1");
 
@@ -117,7 +124,30 @@ public class FrameInformes extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setText("Fecha de Remate");
+        jLabel1.setText("Remate");
+
+        jButton1.setText("Listado de Deudas pendientes");
+
+        jButton2.setText("Detalle del Remate");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Detalle de Transferencias");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Detalle de Recibos");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,9 +155,18 @@ public class FrameInformes extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(37, 37, 37)
-                .addComponent(cboFechaRemate, 0, 568, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(cboFechaRemate, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 452, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -137,7 +176,15 @@ public class FrameInformes extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cboFechaRemate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addContainerGap(580, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(346, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -158,6 +205,18 @@ public class FrameInformes extends javax.swing.JInternalFrame {
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
     }//GEN-LAST:event_formInternalFrameActivated
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,6 +264,10 @@ public class FrameInformes extends javax.swing.JInternalFrame {
     private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTimeTableCellRenderer1;
     private com.lacreacion.remates.utils.DateToStringConverter dateToStringConverter1;
     private javax.persistence.EntityManager entityManager;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private java.util.List<com.lacreacion.remates.domain.TblMiembros> listMiembros;
     private java.util.List<com.lacreacion.remates.domain.TblRemates> listRemates;

@@ -62,7 +62,7 @@ public class FrameRematesDetalle extends JInternalFrame {
 
             AutoCompleteSupport support2 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
             support2.setFilterMode(TextMatcherEditor.CONTAINS);
-//AutoCompleteDecorator.decorate(cboMiembro);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
             ex.printStackTrace();
@@ -80,7 +80,8 @@ public class FrameRematesDetalle extends JInternalFrame {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         entityManager = java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
-        queryRematesDetalle = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesDetalle t ORDER BY t.fechahora");
+        queryRematesDetalle = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesDetalle t WHERE t.idRemate = :remateId ORDER BY t.fechahora");
+        queryRematesDetalle.setParameter("remateId", null) ;
         listRematesDetalle = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(queryRematesDetalle.getResultList());
         tblRematesCategoriasQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT t FROM TblRematesCategorias t ORDER BY t.descripcion");
         tblRematesCategoriasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(tblRematesCategoriasQuery.getResultList());
@@ -226,7 +227,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         bindingGroup.addBinding(binding);
 
         txtCtaCte.addFocusListener(formListener);
-        txtCtaCte.addActionListener(formListener);
         txtCtaCte.addKeyListener(formListener);
 
         idMiembroLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -364,7 +364,8 @@ public class FrameRematesDetalle extends JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cboFechaRemate, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(cboFechaRemate, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -413,7 +414,7 @@ public class FrameRematesDetalle extends JInternalFrame {
                         .addComponent(dateTableCellRenderer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(deleteButton)
@@ -444,9 +445,6 @@ public class FrameRematesDetalle extends JInternalFrame {
             else if (evt.getSource() == deleteButton) {
                 FrameRematesDetalle.this.deleteButtonActionPerformed(evt);
             }
-            else if (evt.getSource() == txtCtaCte) {
-                FrameRematesDetalle.this.txtCtaCteActionPerformed(evt);
-            }
             else if (evt.getSource() == cboCategoria) {
                 FrameRematesDetalle.this.cboCategoriaActionPerformed(evt);
             }
@@ -471,9 +469,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         }
 
         public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getSource() == txtCtaCte) {
-                FrameRematesDetalle.this.txtCtaCteKeyPressed(evt);
-            }
         }
 
         public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -483,9 +478,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         }
 
         public void keyTyped(java.awt.event.KeyEvent evt) {
-            if (evt.getSource() == txtCtaCte) {
-                FrameRematesDetalle.this.txtCtaCteKeyTyped(evt);
-            }
         }
 
         public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -534,32 +526,35 @@ public class FrameRematesDetalle extends JInternalFrame {
     @SuppressWarnings("unchecked")
     void refresh() {
         try {
-            entityManager.getTransaction().rollback();
-            entityManager.getTransaction().begin();
-            java.util.Collection data = queryRematesDetalle.getResultList();
-            data.stream().forEach((entity) -> {
-                entityManager.refresh(entity);
-            });
-            listRematesDetalle.clear();
-            listRematesDetalle.addAll(data);
+            if (cboFechaRemate.getSelectedItem() != null && entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+                entityManager.getTransaction().begin();
+                queryRematesDetalle.setParameter("remateId", ((TblRemates) cboFechaRemate.getSelectedItem()));
+                java.util.Collection data = queryRematesDetalle.getResultList();
+                data.stream().forEach((entity) -> {
+                    entityManager.refresh(entity);
+                });
+                listRematesDetalle.clear();
+                listRematesDetalle.addAll(data);
 
-            data = queryMiembros.getResultList();
-            data.stream().forEach((entity) -> {
-                entityManager.refresh(entity);
-            });
-            listMiembros.clear();
-            listMiembros.addAll(data);
+                data = queryMiembros.getResultList();
+                data.stream().forEach((entity) -> {
+                    entityManager.refresh(entity);
+                });
+                listMiembros.clear();
+                listMiembros.addAll(data);
 
-            data = tblRematesCategoriasQuery.getResultList();
-            data.stream().forEach((entity) -> {
-                entityManager.refresh(entity);
-            });
-            tblRematesCategoriasList.clear();
-            tblRematesCategoriasList.addAll(data);
+                data = tblRematesCategoriasQuery.getResultList();
+                data.stream().forEach((entity) -> {
+                    entityManager.refresh(entity);
+                });
+                tblRematesCategoriasList.clear();
+                tblRematesCategoriasList.addAll(data);
 
-            lblTotal.setText(String.format("%,d", listRematesDetalle.stream().mapToInt(a -> a.getMonto()).sum()));
-            lblTotalOperaciones.setText(String.format("%,d", listRematesDetalle.stream().mapToInt(a -> a.getMonto()).count()));
-            txtCtaCte.setText("");
+                lblTotal.setText(String.format("%,d", listRematesDetalle.stream().mapToInt(a -> a.getMonto()).sum()));
+                lblTotalOperaciones.setText(String.format("%,d", listRematesDetalle.stream().mapToInt(a -> a.getMonto()).count()));
+                txtCtaCte.setText("");
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
@@ -624,15 +619,6 @@ public class FrameRematesDetalle extends JInternalFrame {
         newButton.requestFocus();
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void txtCtaCteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyPressed
-// TODO add your handling code here:
-    }//GEN-LAST:event_txtCtaCteKeyPressed
-
-    private void txtCtaCteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyTyped
-
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCtaCteKeyTyped
-
     private void txtCtaCteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyReleased
         try {
             txtCtaCte.setBackground(Color.white);
@@ -658,8 +644,7 @@ public class FrameRematesDetalle extends JInternalFrame {
 
     private void txtCtaCteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCtaCteFocusGained
         try {
-            txtCtaCte.setSelectionStart(0);
-            txtCtaCte.setSelectionEnd(txtCtaCte.getText().length());
+            txtCtaCte.selectAll();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
@@ -669,10 +654,6 @@ public class FrameRematesDetalle extends JInternalFrame {
     private void cboCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCategoriaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cboCategoriaActionPerformed
-
-    private void txtCtaCteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCtaCteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCtaCteActionPerformed
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
         refresh();
@@ -686,13 +667,14 @@ public class FrameRematesDetalle extends JInternalFrame {
 
     private void cboFechaRemateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFechaRemateActionPerformed
         try {
-            if (cboFechaRemate.getSelectedIndex() > -1) {
+            refresh();
+            /*if (cboFechaRemate.getSelectedIndex() > -1) {
 
-                String idRemate = ((TblRemates) cboFechaRemate.getSelectedItem()).getId().toString();
-                queryRematesDetalle = entityManager.createQuery("SELECT r FROM TblRematesDetalle r WHERE r.idRemate.id = " + idRemate);
-                listRematesDetalle.clear();
-                listRematesDetalle.addAll(queryRematesDetalle.getResultList());
-            }
+             //queryRematesDetalle = entityManager.createQuery("SELECT r FROM TblRematesDetalle r WHERE r.idRemate.id = " + idRemate);
+             queryRematesDetalle.setParameter("remateId", ((TblRemates) cboFechaRemate.getSelectedItem()));
+             listRematesDetalle.clear();
+             listRematesDetalle.addAll(queryRematesDetalle.getResultList());
+             }*/
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
             ex.printStackTrace();
@@ -700,7 +682,7 @@ public class FrameRematesDetalle extends JInternalFrame {
     }//GEN-LAST:event_cboFechaRemateActionPerformed
 
     private void montoFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_montoFieldFocusGained
-
+        montoField.selectAll();
     }//GEN-LAST:event_montoFieldFocusGained
 
     private void montoFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_montoFieldMouseClicked

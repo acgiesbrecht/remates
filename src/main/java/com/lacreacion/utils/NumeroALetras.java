@@ -33,17 +33,9 @@ public abstract class NumeroALetras {
         "TRESCIENTOS ", "CUATROCIENTOS ", "QUINIENTOS ", "SEISCIENTOS ",
         "SETECIENTOS ", "OCHOCIENTOS ", "NOVECIENTOS "};
 
-    /**
-     * Convierte a letras un numero de la forma $123,456.32
-     *
-     * @param number Numero en representacion texto
-     * @throws NumberFormatException Si valor del numero no es valido (fuera de
-     * rango o )
-     * @return Numero en letras
-     */
     public static String convertNumberToLetter(String number)
             throws NumberFormatException {
-        return convertNumberToLetter(Double.parseDouble(number));
+        return convertNumberToLetter(Integer.valueOf(number));
     }
 
     /**
@@ -54,7 +46,7 @@ public abstract class NumeroALetras {
      * @return Numero convertido a texto
      * @throws NumberFormatException Si el numero esta fuera del rango
      */
-    public static String convertNumberToLetter(double doubleNumber)
+    public static String convertNumberToLetter(Integer integerNumber)
             throws NumberFormatException {
 
         StringBuilder converted = new StringBuilder();
@@ -66,21 +58,21 @@ public abstract class NumeroALetras {
 
         // formateamos el numero, para ajustarlo a el formato de tres puntos
         // decimales
-        String formatedDouble = format.format(doubleNumber);
-        doubleNumber = Double.parseDouble(formatedDouble);
+        String formatedDouble = format.format(integerNumber);
+        integerNumber = Integer.valueOf(formatedDouble);
 
         // Validamos que sea un numero legal
-        if (doubleNumber > 999999999) {
+        if (integerNumber > 999999999) {
             throw new NumberFormatException(
                     "El numero es mayor de 999'999.999, "
                     + "no es posible convertirlo");
         }
 
-        if (doubleNumber < 0) {
+        if (integerNumber < 0) {
             throw new NumberFormatException("El numero debe ser positivo");
         }
 
-        String splitNumber[] = String.valueOf(doubleNumber).replace('.', '#')
+        String splitNumber[] = String.valueOf(integerNumber).replace('.', '#')
                 .split("#");
 
         // Descompone el trio de millones
@@ -121,21 +113,7 @@ public abstract class NumeroALetras {
         if (cientos > 1) {
             converted.append(convertNumber(String.valueOf(cientos)));
         }
-
-        // Descompone los centavos
-        int centavos = Integer.parseInt(String.valueOf(getDigitAt(
-                splitNumber[1], 2))
-                + String.valueOf(getDigitAt(splitNumber[1], 1))
-                + String.valueOf(getDigitAt(splitNumber[1], 0)));
-        if (centavos == 1) {
-            converted.append(" CON UN CENTAVO");
-        } else if (centavos > 1) {
-            converted.append(" CON " + convertNumber(String.valueOf(centavos))
-                    + "CENTAVOS");
-        }
-
         converted.append(".");
-
         return converted.toString();
     }
 

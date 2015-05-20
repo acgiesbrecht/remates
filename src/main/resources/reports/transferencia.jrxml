@@ -13,7 +13,7 @@ FROM transferencia
 where id =  $P{transferencia_id}]]>
     </queryString>
     <field name="id" class="java.lang.Integer"/>
-    <field name="fechahora" class="java.sql.Timestamp"/>
+    <field name="fechahora" class="java.sql.Date"/>
     <field name="cta_debito" class="java.lang.Integer"/>
     <field name="cta_credito" class="java.lang.Integer"/>
     <field name="monto" class="java.lang.Integer"/>
@@ -123,7 +123,7 @@ where id =  $P{transferencia_id}]]>
                 <text><![CDATA[(Uso Interno)]]></text>
             </staticText>
             <staticText>
-                <reportElement x="6" y="80" width="36" height="10" uuid="c43050b3-885c-4476-95dd-2563ac0129bb">
+                <reportElement x="6" y="80" width="36" height="25" uuid="c43050b3-885c-4476-95dd-2563ac0129bb">
                     <property name="local_mesure_unitheight" value="mm"/>
                 </reportElement>
                 <textElement textAlignment="Left">
@@ -291,7 +291,7 @@ where id =  $P{transferencia_id}]]>
                 <textFieldExpression><![CDATA[$F{d_domicilio}==null && $F{d_box}==null ? "" : $F{d_domicilio} + " - C.d.C. " + $F{d_box}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="42" y="80" width="166" height="10" uuid="9b4148f0-4518-4f5e-89a1-3bacbc918afe"/>
+                <reportElement x="42" y="80" width="166" height="25" uuid="9b4148f0-4518-4f5e-89a1-3bacbc918afe"/>
                 <textElement>
                     <font fontName="Serif" size="8"/>
                 </textElement>
@@ -514,7 +514,7 @@ where id =  $P{transferencia_id}]]>
                 <textFieldExpression><![CDATA[com.lacreacion.utils.FormatCtaCte.format($F{cta_credito})]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="5" y="360" width="36" height="10" uuid="8c2a7689-bf4f-4ffc-a0de-4d2643002ff5">
+                <reportElement x="5" y="360" width="36" height="25" uuid="8c2a7689-bf4f-4ffc-a0de-4d2643002ff5">
                     <property name="local_mesure_unitheight" value="mm"/>
                 </reportElement>
                 <textElement textAlignment="Left">
@@ -603,7 +603,7 @@ where id =  $P{transferencia_id}]]>
                 </graphicElement>
             </line>
             <textField>
-                <reportElement x="41" y="360" width="166" height="10" uuid="bac263f6-78cb-4037-a63d-2461d2c61ed8"/>
+                <reportElement x="41" y="360" width="166" height="25" uuid="bac263f6-78cb-4037-a63d-2461d2c61ed8"/>
                 <textElement>
                     <font fontName="Serif" size="8"/>
                 </textElement>
@@ -770,7 +770,7 @@ where id =  $P{transferencia_id}]]>
                 <textFieldExpression><![CDATA[com.lacreacion.utils.FormatCtaCte.format($F{cta_credito})]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="6" y="630" width="36" height="10" uuid="316de5b5-8036-4da8-a073-084caa697ed1">
+                <reportElement x="6" y="630" width="36" height="25" uuid="316de5b5-8036-4da8-a073-084caa697ed1">
                     <property name="local_mesure_unitheight" value="mm"/>
                 </reportElement>
                 <textElement textAlignment="Left">
@@ -859,7 +859,7 @@ where id =  $P{transferencia_id}]]>
                 </graphicElement>
             </line>
             <textField>
-                <reportElement x="42" y="630" width="166" height="10" uuid="ce45b791-11db-4382-bac4-6ad27214982a"/>
+                <reportElement x="42" y="630" width="166" height="25" uuid="ce45b791-11db-4382-bac4-6ad27214982a"/>
                 <textElement>
                     <font fontName="Serif" size="8"/>
                 </textElement>

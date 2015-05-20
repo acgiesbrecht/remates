@@ -28,8 +28,8 @@ import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -477,9 +477,9 @@ public class FrameTransferencias extends JInternalFrame {
                 JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-                //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
-                //jReportsViewer.setVisible(true);
-                JasperPrintManager.printReport(jasperPrint, false);
+                JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                jReportsViewer.setVisible(true);
+                //JasperPrintManager.printReport(jasperPrint, false);
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
