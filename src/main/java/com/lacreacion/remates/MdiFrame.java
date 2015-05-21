@@ -181,7 +181,7 @@ public class MdiFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem5);
 
-        jMenuItem6.setText("Listado Pendientes");
+        jMenuItem6.setText("Informes");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
@@ -352,15 +352,13 @@ public class MdiFrame extends javax.swing.JFrame {
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         try {
-            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+            FrameInformes frame = new FrameInformes();
+            frame.setVisible(true);
 
-            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/pendientes.jrxml"));
-            Map parameters = new HashMap();
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
-            jReportsViewer.setVisible(true);
-            //JasperPrintManager.printReport(jasperPrint, false);
+            desktop.add(frame);
+
+            frame.setSelected(true);
+            frame.setMaximum(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
             ex.printStackTrace();

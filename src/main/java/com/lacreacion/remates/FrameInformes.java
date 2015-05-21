@@ -9,12 +9,23 @@ import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import com.lacreacion.remates.domain.TblMiembros;
+import com.lacreacion.remates.domain.TblRemates;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.prefs.Preferences;
+import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -58,6 +69,8 @@ public class FrameInformes extends javax.swing.JInternalFrame {
 
             AutoCompleteSupport support = AutoCompleteSupport.install(cboFechaRemate, GlazedLists.eventListOf(listRemates.toArray()));
             support.setFilterMode(TextMatcherEditor.CONTAINS);
+            AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
+            support1.setFilterMode(TextMatcherEditor.CONTAINS);
             cboFechaRemate.setSelectedIndex(-1);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -91,6 +104,13 @@ public class FrameInformes extends javax.swing.JInternalFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        idMiembroLabel = new javax.swing.JLabel();
+        idMiembroLabel1 = new javax.swing.JLabel();
+        txtCtaCte = new javax.swing.JTextField();
+        idMiembroLabel2 = new javax.swing.JLabel();
+        cboMiembro = new javax.swing.JComboBox();
 
         dateTimeTableCellRenderer1.setText("dateTimeTableCellRenderer1");
 
@@ -127,6 +147,11 @@ public class FrameInformes extends javax.swing.JInternalFrame {
         jLabel1.setText("Remate");
 
         jButton1.setText("Listado de Deudas pendientes");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Detalle del Remate");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -149,6 +174,58 @@ public class FrameInformes extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton5.setText("Detalle de Compras");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Detalle de Pagos");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        idMiembroLabel.setText("Miembro:");
+
+        idMiembroLabel1.setText("Cta. Cte.:");
+
+        txtCtaCte.setEnabled(false);
+        txtCtaCte.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCtaCteFocusGained(evt);
+            }
+        });
+        txtCtaCte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCtaCteActionPerformed(evt);
+            }
+        });
+        txtCtaCte.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCtaCteKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCtaCteKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCtaCteKeyTyped(evt);
+            }
+        });
+
+        idMiembroLabel2.setText("Nombre:");
+
+        jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listMiembros, cboMiembro);
+        bindingGroup.addBinding(jComboBoxBinding);
+
+        cboMiembro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboMiembroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -165,8 +242,20 @@ public class FrameInformes extends javax.swing.JInternalFrame {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 452, Short.MAX_VALUE)))
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(idMiembroLabel)
+                                .addGap(37, 37, 37)
+                                .addComponent(idMiembroLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtCtaCte, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(idMiembroLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 130, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -184,7 +273,18 @@ public class FrameInformes extends javax.swing.JInternalFrame {
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(346, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idMiembroLabel)
+                    .addComponent(idMiembroLabel1)
+                    .addComponent(txtCtaCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(idMiembroLabel2)
+                    .addComponent(cboMiembro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(198, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -207,16 +307,164 @@ public class FrameInformes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/detalle_remate.jrxml"));
+            Map parameters = new HashMap();
+            parameters.put("id_remate", ((TblRemates) cboFechaRemate.getSelectedItem()).getId());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/detalle_transferencias.jrxml"));
+            Map parameters = new HashMap();
+            parameters.put("id_remate", ((TblRemates) cboFechaRemate.getSelectedItem()).getId());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/detalle_recibos.jrxml"));
+            Map parameters = new HashMap();
+            parameters.put("id_remate", ((TblRemates) cboFechaRemate.getSelectedItem()).getId());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/pendientes.jrxml"));
+            Map parameters = new HashMap();
+            parameters.put("id_remate", ((TblRemates) cboFechaRemate.getSelectedItem()).getId());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/detalle_compras_miembro.jrxml"));
+            Map parameters = new HashMap();
+            parameters.put("id_remate", ((TblRemates) cboFechaRemate.getSelectedItem()).getId());
+            parameters.put("id_miembro", ((TblMiembros) cboMiembro.getSelectedItem()).getId());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        try {
+            EntityManager entityManager = Persistence.createEntityManagerFactory("remates_PU", persistenceMap).createEntityManager();
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseIP + ":5432/remate", "postgres", "123456");
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/detalle_pagos_miembro.jrxml"));
+            Map parameters = new HashMap();
+            parameters.put("id_remate", ((TblRemates) cboFechaRemate.getSelectedItem()).getId());
+            parameters.put("id_miembro", ((TblMiembros) cboMiembro.getSelectedItem()).getId());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+            JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+            jReportsViewer.setVisible(true);
+            //JasperPrintManager.printReport(jasperPrint, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void txtCtaCteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCtaCteFocusGained
+        txtCtaCte.setSelectionStart(0);
+        txtCtaCte.setSelectionEnd(txtCtaCte.getText().length());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteFocusGained
+
+    private void txtCtaCteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCtaCteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteActionPerformed
+
+    private void txtCtaCteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteKeyPressed
+
+    private void txtCtaCteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyReleased
+        try {
+            txtCtaCte.setBackground(Color.white);
+            if (txtCtaCte.getText().length() > 4) {
+                listMiembrosFiltered = listMiembros;
+                Optional<TblMiembros> value = listMiembrosFiltered.stream().filter(a -> a.getCtacte().equals(Integer.valueOf(txtCtaCte.getText())))
+                        .findFirst();
+                if (value.isPresent()) {
+                    cboMiembro.setSelectedItem(value.get());
+                    txtCtaCte.setBackground(Color.green);
+                }
+
+                /*for (TblMiembros value : listMiembrosFiltered) {
+                 if (value.getCtacte().equals(Integer.valueOf(txtCtaCte.getText()))) {
+                 cboMiembro.setSelectedItem(value);
+                 txtCtaCte.setBackground(Color.green);
+                 }
+                 }*/
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteKeyReleased
+
+    private void txtCtaCteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCtaCteKeyTyped
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCtaCteKeyTyped
+
+    private void cboMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMiembroActionPerformed
+        if (cboMiembro.getSelectedItem() != null) {
+            txtCtaCte.setText(((TblMiembros) cboMiembro.getSelectedItem()).getCtacte().toString());
+        }
+    }//GEN-LAST:event_cboMiembroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,13 +509,19 @@ public class FrameInformes extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboFechaRemate;
+    private javax.swing.JComboBox cboMiembro;
     private com.lacreacion.remates.utils.DateTimeTableCellRenderer dateTimeTableCellRenderer1;
     private com.lacreacion.remates.utils.DateToStringConverter dateToStringConverter1;
     private javax.persistence.EntityManager entityManager;
+    private javax.swing.JLabel idMiembroLabel;
+    private javax.swing.JLabel idMiembroLabel1;
+    private javax.swing.JLabel idMiembroLabel2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private java.util.List<com.lacreacion.remates.domain.TblMiembros> listMiembros;
     private java.util.List<com.lacreacion.remates.domain.TblRemates> listRemates;
@@ -276,6 +530,7 @@ public class FrameInformes extends javax.swing.JInternalFrame {
     private javax.persistence.Query queryMiembros;
     private javax.persistence.Query queryRemates;
     private javax.persistence.Query queryRematesDetalle;
+    private javax.swing.JTextField txtCtaCte;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

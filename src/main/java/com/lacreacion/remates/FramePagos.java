@@ -685,7 +685,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
              if (!StringUtils.isNumeric(txtEfectivo.getText())) {
              txtEfectivo.setText("0");
              }*/
-            if ((Integer) txtRecibo.getValue() + (Integer) txtTransferencia.getValue() > saldoActual) {
+            if (((Number) txtRecibo.getValue()).intValue() + ((Number) txtTransferencia.getValue()).intValue() > saldoActual) {
                 JOptionPane.showMessageDialog(null, "El Monto a abonar no puede superar la deuda existente.");
                 return;
             }
