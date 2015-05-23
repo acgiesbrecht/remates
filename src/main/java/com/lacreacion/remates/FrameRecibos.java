@@ -9,7 +9,10 @@ import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import java.awt.EventQueue;
+import java.awt.KeyboardFocusManager;
 import java.beans.Beans;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -19,9 +22,11 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -51,6 +56,21 @@ public class FrameRecibos extends JInternalFrame {
             }
             AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
             support1.setFilterMode(TextMatcherEditor.CONTAINS);
+
+            KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                    .addPropertyChangeListener("permanentFocusOwner", new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(final PropertyChangeEvent e) {
+                            if (e.getNewValue() instanceof JFormattedTextField) {
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        JFormattedTextField textField = (JFormattedTextField) e.getNewValue();
+                                        textField.selectAll();
+                                    }
+                                });
+                            }
+                        }
+                    });
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }

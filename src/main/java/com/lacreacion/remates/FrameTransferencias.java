@@ -208,6 +208,8 @@ public class FrameTransferencias extends JInternalFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), cboMiembro, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
+        cboMiembro.addActionListener(formListener);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -329,6 +331,9 @@ public class FrameTransferencias extends JInternalFrame {
             }
             else if (evt.getSource() == txtCtaCte) {
                 FrameTransferencias.this.txtCtaCteActionPerformed(evt);
+            }
+            else if (evt.getSource() == cboMiembro) {
+                FrameTransferencias.this.cboMiembroActionPerformed(evt);
             }
         }
 
@@ -494,8 +499,7 @@ public class FrameTransferencias extends JInternalFrame {
 
     private void txtCtaCteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCtaCteFocusGained
         try {
-            txtCtaCte.setSelectionStart(0);
-            txtCtaCte.setSelectionEnd(txtCtaCte.getText().length());
+            txtCtaCte.selectAll();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
         }
@@ -537,6 +541,14 @@ public class FrameTransferencias extends JInternalFrame {
 
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCtaCteKeyTyped
+
+    private void cboMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMiembroActionPerformed
+        if (cboMiembro.getSelectedItem() != null) {
+            txtCtaCte.setText(((TblMiembros) cboMiembro.getSelectedItem()).getCtacte().toString());
+        } else {
+            txtCtaCte.setText("");
+        }
+    }//GEN-LAST:event_cboMiembroActionPerformed
 
     private void getDatabaseIP() {
         try {

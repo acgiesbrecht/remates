@@ -16,6 +16,9 @@ import com.lacreacion.remates.domain.TblRematesCategorias;
 import com.lacreacion.remates.domain.TblRematesCuotas;
 import com.lacreacion.remates.utils.Varios;
 import java.awt.Color;
+import java.awt.KeyboardFocusManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
@@ -27,7 +30,9 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.prefs.Preferences;
 import javax.persistence.Persistence;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -104,9 +109,31 @@ public class FramePagos extends javax.swing.JInternalFrame {
             support.setFilterMode(TextMatcherEditor.CONTAINS);
             AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
             support1.setFilterMode(TextMatcherEditor.CONTAINS);
-            cboFechaRemate.setSelectedIndex(-1);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String s = sdf.format(new Date());
+            Date today = sdf.parse(s);
+            Optional<TblRemates> value = listRemates.stream().filter(a -> a.getFecha().equals(today))
+                    .findFirst();
+            if (value.isPresent()) {
+                cboFechaRemate.setSelectedItem(value.get());
+            } else {
+                cboFechaRemate.setSelectedIndex(-1);
+            }
             cboMiembro.setSelectedIndex(-1);
-
+            KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                    .addPropertyChangeListener("permanentFocusOwner", new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(final PropertyChangeEvent e) {
+                            if (e.getNewValue() instanceof JFormattedTextField) {
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        JFormattedTextField textField = (JFormattedTextField) e.getNewValue();
+                                        textField.selectAll();
+                                    }
+                                });
+                            }
+                        }
+                    });
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
@@ -304,37 +331,17 @@ public class FramePagos extends javax.swing.JInternalFrame {
 
         txtTransferencia.setColumns(9);
         txtTransferencia.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        txtTransferencia.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtTransferenciaFocusGained(evt);
-            }
-        });
         txtTransferencia.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtTransferenciaMouseClicked(evt);
             }
         });
-        txtTransferencia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTransferenciaActionPerformed(evt);
-            }
-        });
 
         txtRecibo.setColumns(9);
         txtRecibo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        txtRecibo.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtReciboFocusGained(evt);
-            }
-        });
         txtRecibo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtReciboMouseClicked(evt);
-            }
-        });
-        txtRecibo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtReciboActionPerformed(evt);
             }
         });
 
@@ -660,6 +667,9 @@ public class FramePagos extends javax.swing.JInternalFrame {
     private void cboMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMiembroActionPerformed
         if (cboMiembro.getSelectedItem() != null) {
             loadMiembro();
+            txtCtaCte.setText(((TblMiembros) cboMiembro.getSelectedItem()).getCtacte().toString());
+        } else {
+            txtCtaCte.setText("");
         }
 
     }//GEN-LAST:event_cboMiembroActionPerformed
@@ -775,29 +785,13 @@ public class FramePagos extends javax.swing.JInternalFrame {
         databaseIP = Preferences.userRoot().node("Remates").get("DatabaseIP", "127.0.0.1");
     }//GEN-LAST:event_formInternalFrameActivated
 
-    private void txtTransferenciaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTransferenciaFocusGained
-        txtTransferencia.selectAll();
-    }//GEN-LAST:event_txtTransferenciaFocusGained
-
     private void txtTransferenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTransferenciaMouseClicked
 
     }//GEN-LAST:event_txtTransferenciaMouseClicked
 
-    private void txtTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTransferenciaActionPerformed
-
-    }//GEN-LAST:event_txtTransferenciaActionPerformed
-
-    private void txtReciboFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtReciboFocusGained
-        txtRecibo.selectAll();        // TODO add your handling code here:
-    }//GEN-LAST:event_txtReciboFocusGained
-
     private void txtReciboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtReciboMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_txtReciboMouseClicked
-
-    private void txtReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtReciboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtReciboActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         loadPendientes();
