@@ -71,7 +71,7 @@ public class FrameInformes extends javax.swing.JInternalFrame {
             support.setFilterMode(TextMatcherEditor.CONTAINS);
             AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
             support1.setFilterMode(TextMatcherEditor.CONTAINS);
-            cboFechaRemate.setSelectedIndex(-1);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
@@ -192,7 +192,6 @@ public class FrameInformes extends javax.swing.JInternalFrame {
 
         idMiembroLabel1.setText("Cta. Cte.:");
 
-        txtCtaCte.setEnabled(false);
         txtCtaCte.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtCtaCteFocusGained(evt);

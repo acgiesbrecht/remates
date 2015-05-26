@@ -444,8 +444,12 @@ public class FrameMiembros extends JInternalFrame {
                         TblMiembros miembro = new TblMiembros();
                         miembro.setNombre(row.getCell(0).getStringCellValue());
                         miembro.setCtacte(Integer.valueOf(row.getCell(1).getStringCellValue().replaceAll("[^\\d.]", "")));
-                        miembro.setDomicilio(row.getCell(2).getStringCellValue());
-                        miembro.setBox((int) row.getCell(3).getNumericCellValue());
+                        if (row.getCell(2) != null) {
+                            miembro.setDomicilio(row.getCell(2).getStringCellValue());
+                        }
+                        if (row.getCell(3) != null) {
+                            miembro.setBox((int) row.getCell(3).getNumericCellValue());
+                        }
                         entityManager.persist(miembro);
                         entityManager.flush();
                         java.util.Collection data = query.getResultList();

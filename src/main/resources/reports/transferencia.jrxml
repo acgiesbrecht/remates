@@ -283,14 +283,14 @@ where id =  $P{transferencia_id}]]>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{d_nombre}]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField isBlankWhenNull="true">
                 <reportElement x="116" y="124" width="156" height="10" uuid="5e081ea9-0e41-46b9-9ef5-5c318ffd224c"/>
                 <textElement>
                     <font fontName="Times New Roman" size="8" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{d_domicilio}==null && $F{d_box}==null ? "" : $F{d_domicilio} + " - C.d.C. " + $F{d_box}]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField pattern="dd/MM/yyyy">
                 <reportElement x="42" y="80" width="166" height="25" uuid="9b4148f0-4518-4f5e-89a1-3bacbc918afe"/>
                 <textElement>
                     <font fontName="Serif" size="8"/>
@@ -332,7 +332,7 @@ where id =  $P{transferencia_id}]]>
                 </textElement>
                 <textFieldExpression><![CDATA[new DecimalFormat("#,##0").format($F{monto})]]></textFieldExpression>
             </textField>
-            <textField>
+            <textField isBlankWhenNull="true">
                 <reportElement x="116" y="167" width="156" height="10" uuid="54ca1d39-e0ab-4f3a-930c-2685bf84fb04"/>
                 <textElement>
                     <font fontName="Times New Roman" size="8" isBold="true"/>
@@ -602,7 +602,7 @@ where id =  $P{transferencia_id}]]>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
-            <textField>
+            <textField pattern="dd/MM/yyyy">
                 <reportElement x="41" y="360" width="166" height="25" uuid="bac263f6-78cb-4037-a63d-2461d2c61ed8"/>
                 <textElement>
                     <font fontName="Serif" size="8"/>
@@ -858,7 +858,7 @@ where id =  $P{transferencia_id}]]>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
-            <textField>
+            <textField pattern="dd/MM/yyyy">
                 <reportElement x="42" y="630" width="166" height="25" uuid="ce45b791-11db-4382-bac4-6ad27214982a"/>
                 <textElement>
                     <font fontName="Serif" size="8"/>
@@ -886,7 +886,7 @@ where id =  $P{transferencia_id}]]>
                 </textElement>
                 <text><![CDATA[TRIPLICADO]]></text>
             </staticText>
-            <textField>
+            <textField isBlankWhenNull="true">
                 <reportElement x="116" y="404" width="156" height="10" uuid="55b36a81-6713-460a-878a-71ba6fa95682"/>
                 <textElement>
                     <font fontName="Times New Roman" size="8" isBold="true"/>

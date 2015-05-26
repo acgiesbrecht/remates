@@ -36,8 +36,8 @@ import javax.swing.SwingUtilities;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -257,6 +257,15 @@ public class FramePagos extends javax.swing.JInternalFrame {
         jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listMiembros, cboMiembro);
         bindingGroup.addBinding(jComboBoxBinding);
 
+        cboMiembro.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cboMiembroPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
         cboMiembro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboMiembroActionPerformed(evt);
@@ -534,11 +543,11 @@ public class FramePagos extends javax.swing.JInternalFrame {
                         + "	LEFT JOIN tbl_remates_detalle rd ON m.id = rd.id_miembro "
                         + "	group by m.id, m.nombre, m.ctacte, m.domicilio, m.box),"
                         + "     pagos AS"
-                        + "       (SELECT m.nombre, m.ctacte, COALESCE(SUM(p.monto),0) AS monto FROM tbl_miembros m "
+                        + "       (SELECT m.*, COALESCE(SUM(p.monto),0) AS monto FROM tbl_miembros m "
                         + "	LEFT JOIN tbl_pagos p ON m.id = p.id_miembro "
-                        + "	group by m.nombre, m.ctacte)     "
+                        + "	group by m.id, m.nombre, m.ctacte, m.domicilio, m.box)     "
                         + "SELECT remates.id, remates.nombre, remates.ctacte, remates.domicilio, remates.box FROM remates, pagos "
-                        + "where remates.nombre = pagos.nombre  AND (remates.monto - pagos.monto) > 0 "
+                        + "where remates.id = pagos.id AND (remates.monto - pagos.monto) > 0 "
                         + "order by remates.nombre", TblMiembros.class);
 
                 listMiembros.clear();
@@ -657,7 +666,8 @@ public class FramePagos extends javax.swing.JInternalFrame {
             txtRecibo.setValue(0);
 
             txtTransferencia.selectAll();
-            txtTransferencia.requestFocus();
+            //txtTransferencia.requestFocus();
+            txtCtaCte.setText(((TblMiembros) cboMiembro.getSelectedItem()).getCtacte().toString());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -665,12 +675,6 @@ public class FramePagos extends javax.swing.JInternalFrame {
         }
     }
     private void cboMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboMiembroActionPerformed
-        if (cboMiembro.getSelectedItem() != null) {
-            loadMiembro();
-            txtCtaCte.setText(((TblMiembros) cboMiembro.getSelectedItem()).getCtacte().toString());
-        } else {
-            txtCtaCte.setText("");
-        }
 
     }//GEN-LAST:event_cboMiembroActionPerformed
 
@@ -717,7 +721,20 @@ public class FramePagos extends javax.swing.JInternalFrame {
                     entityManager.flush();
                     entityManager.getTransaction().commit();
                     t_id = transferencia.getId();
+                    if (t_id > 0) {
+                        Map parameters = new HashMap();
+                        parameters.put("transferencia_id", t_id);
+                        parameters.put("logo", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                        parameters.put("logo2", getClass().getResourceAsStream("/reports/cclogo200.png"));
+                        parameters.put("logo3", getClass().getResourceAsStream("/reports/cclogo200.png"));
 
+                        JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
+
+                        JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+                        //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                        //jReportsViewer.setVisible(true);
+                        JasperPrintManager.printReport(jasperPrint, false);
+                    }
                 }
 
             }
@@ -737,6 +754,15 @@ public class FramePagos extends javax.swing.JInternalFrame {
                 entityManager.getTransaction().commit();
 
                 r_id = recibo.getId();
+                if (r_id > 0) {
+                    Map parameters = new HashMap();
+                    parameters.put("recibo_id", r_id);
+                    JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/recibo.jrxml"));
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
+                    //JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
+                    //jReportsViewer.setVisible(true);
+                    JasperPrintManager.printReport(jasperPrint, false);
+                }
             }
 
             loadPendientes();
@@ -748,30 +774,6 @@ public class FramePagos extends javax.swing.JInternalFrame {
             txtCtaCte.setText("");
             txtCtaCte.setBackground(Color.white);
             txtCtaCte.requestFocus();
-
-            if (t_id > 0) {
-                Map parameters = new HashMap();
-                parameters.put("transferencia_id", t_id);
-                parameters.put("logo", getClass().getResourceAsStream("/reports/cclogo200.png"));
-                parameters.put("logo2", getClass().getResourceAsStream("/reports/cclogo200.png"));
-                parameters.put("logo3", getClass().getResourceAsStream("/reports/cclogo200.png"));
-
-                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/transferencia.jrxml"));
-
-                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-                JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
-                jReportsViewer.setVisible(true);
-                //JasperPrintManager.printReport(jasperPrint, false);
-            }
-            if (r_id > 0) {
-                Map parameters = new HashMap();
-                parameters.put("recibo_id", r_id);
-                JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/recibo.jrxml"));
-                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, conn);
-                JasperViewer jReportsViewer = new JasperViewer(jasperPrint, false);
-                jReportsViewer.setVisible(true);
-                //JasperPrintManager.printReport(jasperPrint, false);
-            }
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, Thread.currentThread().getStackTrace()[1].getMethodName() + " - " + ex.getMessage());
@@ -796,6 +798,13 @@ public class FramePagos extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         loadPendientes();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cboMiembroPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cboMiembroPopupMenuWillBecomeInvisible
+        if (cboMiembro.getSelectedItem() != null) {
+            loadMiembro();
+        }
+
+    }//GEN-LAST:event_cboMiembroPopupMenuWillBecomeInvisible
 
     /**
      * @param args the command line arguments

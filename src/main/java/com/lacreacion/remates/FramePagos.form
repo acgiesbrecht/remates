@@ -259,6 +259,7 @@
         <BindingProperty name="elements" source="listMiembros" target="cboMiembro" targetPath="elements" updateStrategy="0" immediately="false"/>
       </BindingProperties>
       <Events>
+        <EventHandler event="popupMenuWillBecomeInvisible" listener="javax.swing.event.PopupMenuListener" parameters="javax.swing.event.PopupMenuEvent" handler="cboMiembroPopupMenuWillBecomeInvisible"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboMiembroActionPerformed"/>
       </Events>
     </Component>

@@ -107,7 +107,7 @@ where r.id =  $P{recibo_id}]]>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
-            <textField pattern="">
+            <textField pattern="dd/MM/yyyy">
                 <reportElement x="69" y="80" width="220" height="20" uuid="9b4148f0-4518-4f5e-89a1-3bacbc918afe"/>
                 <box padding="0">
                     <topPen lineWidth="0.0"/>
@@ -217,7 +217,7 @@ where r.id =  $P{recibo_id}]]>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
             </textField>
-            <textField pattern="">
+            <textField pattern="dd/MM/yyyy">
                 <reportElement x="69" y="351" width="220" height="20" uuid="4a5dd3e0-130f-4654-b84d-80f020720270"/>
                 <box padding="0">
                     <topPen lineWidth="0.0"/>
@@ -337,7 +337,7 @@ where r.id =  $P{recibo_id}]]>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
             </textField>
-            <textField pattern="">
+            <textField pattern="dd/MM/yyyy">
                 <reportElement x="69" y="621" width="220" height="20" uuid="59b9bab8-1142-4aeb-b105-f0b3145a413d"/>
                 <box padding="0">
                     <topPen lineWidth="0.0"/>
