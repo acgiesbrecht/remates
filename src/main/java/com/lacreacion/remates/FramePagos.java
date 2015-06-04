@@ -5,6 +5,8 @@
  */
 package com.lacreacion.remates;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
@@ -53,6 +55,7 @@ public class FramePagos extends javax.swing.JInternalFrame {
     TblRematesCuotas remateCuotas;
     Integer saldoActual;
     Timer timer;
+    EventList<TblMiembros> eventListMiembros = new BasicEventList<>();
 
     /**
      * Creates new form FramePagos
@@ -107,7 +110,10 @@ public class FramePagos extends javax.swing.JInternalFrame {
             //final EventList<TblMiembros> urls = GlazedLists.eventList(Arrays.asList(URLS));
             AutoCompleteSupport support = AutoCompleteSupport.install(cboFechaRemate, GlazedLists.eventListOf(listRemates.toArray()));
             support.setFilterMode(TextMatcherEditor.CONTAINS);
-            AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, GlazedLists.eventListOf(listMiembros.toArray()));
+
+            eventListMiembros.clear();
+            eventListMiembros.addAll(listMiembros);
+            AutoCompleteSupport support1 = AutoCompleteSupport.install(cboMiembro, eventListMiembros);
             support1.setFilterMode(TextMatcherEditor.CONTAINS);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String s = sdf.format(new Date());
@@ -551,8 +557,9 @@ public class FramePagos extends javax.swing.JInternalFrame {
                         + "order by remates.nombre", TblMiembros.class);
 
                 listMiembros.clear();
-
                 listMiembros.addAll(queryMiembros.getResultList());
+                eventListMiembros.clear();
+                eventListMiembros.addAll(listMiembros);
 
                 if (listMiembros.size() > 0) {
                     txtCtaCte.setEnabled(true);
