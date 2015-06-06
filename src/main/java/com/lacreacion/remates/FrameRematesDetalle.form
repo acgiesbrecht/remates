@@ -5,7 +5,6 @@
     <Component class="javax.persistence.EntityManager" name="entityManager">
       <Properties>
         <Property name="persistenceUnit" type="java.lang.String" value="remates_PU"/>
-        <Property name="flushModeType" type="java.lang.Object" value="FlushModeType.COMMIT"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory(&quot;remates_PU&quot;, persistenceMap).createEntityManager();"/>
@@ -16,7 +15,6 @@
     <Component class="javax.persistence.EntityManager" name="entityManager1">
       <Properties>
         <Property name="persistenceUnit" type="java.lang.String" value="remates_PU"/>
-        <Property name="flushModeType" type="java.lang.Object" value="FlushModeType.COMMIT"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : Persistence.createEntityManagerFactory(&quot;remates_PU&quot;, persistenceMap).createEntityManager();"/>
